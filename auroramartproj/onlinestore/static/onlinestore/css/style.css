@@ -1,8 +1,3 @@
-/* * AuroraMart Global Stylesheet
- * Used for both home.html and product_list.html
- */
-
-/* --- 1. Global / Base Styles (Standard Reset) --- */
 :root {
     --primary-color: #007bff;
     --secondary-color: #0056b3;
@@ -10,15 +5,9 @@
     --bg-light: #f4f4f4;
     --card-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     --header-border: 1px;
-    
-    /* Defined padding for the horizontal edges of the page content */
     --page-padding-x: 20px;
-    
-    /* Defined height for the logo/search bar section */
     --logo-bar-height: 50px; 
-    /* Defined height for the category links section */
     --nav-bar-links-height: 60px;
-    /* Total height for the header */
     --header-total-height: 110px; 
 }
 
@@ -33,7 +22,6 @@ body {
     color: var(--text-color);
     background-color: var(--bg-light);
     line-height: 1.6;
-    /* Push content down by the total header height */
     padding-top: var(--header-total-height); 
 }
 
@@ -42,15 +30,12 @@ a {
     color: var(--primary-color);
 }
 
-/* --- 2. Header and Main Navigation --- */
 header {
-    /* Fixed positioning is more reliable for full-width components than sticky */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     
-    /* Header Container Styles */
     display: flex;
     flex-direction: column; 
     background-color: white; 
@@ -61,11 +46,9 @@ header {
     height: var(--header-total-height);
 }
 
-/* Top bar for logo (simulated) */
 .logo {
     font-size: 1.8em;
     font-weight: bold;
-    /* FIX: Using new variable */
     padding: 0 var(--page-padding-x);
     display: flex;
     align-items: center;
@@ -76,16 +59,13 @@ header {
     color: var(--text-color);
 }
 
-/* Main Navbar Container (Category Links) */
 #main-nav-menu {
     display: flex;
     justify-content: flex-start;
-    /* FIX: Using new variable */
     padding: 0 var(--page-padding-x);
     height: var(--nav-bar-links-height);
 }
 
-/* The category-item is the initial hover trigger */
 .category-item {
     position: relative; 
     display: inline-block;
@@ -97,64 +77,47 @@ header {
     font-weight: 500;
     display: block;
     transition: color 0.2s;
-    /* Use transparent border to prevent vertical layout shift on hover */
     border-bottom: 3px solid transparent; 
     padding-bottom: 7px;
 }
 
-/* Highlight line on hover */
 .category-item:hover .nav-category-link {
     color: var(--primary-color);
     border-bottom: 3px solid var(--primary-color); 
 }
 
-/* --- 3. Nav Bar Dropdown Logic (Pure CSS Hover) --- */
-
 .nav-bar-panel {
-    /* FIX: Changed to FIXED position to reliably span the entire viewport */
     position: fixed; 
-    
-    /* Span edges of the viewport (full width) */
     left: 0;
     right: 0;
-    width: 100vw; /* Explicitly set to viewport width for edge-to-edge span */
-    
-    /* Position exactly below the header */
+    width: 100vw;
     top: var(--header-total-height);
-    
     background-color: white; 
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
     z-index: 1900; 
     
-    /* Hidden default state */
     opacity: 0; 
     visibility: hidden; 
     pointer-events: none; 
     
-    /* Transition and persistence delay */
     transition: opacity 0.2s, visibility 0.2s;
-    /* FIX: Increased delay on mouseout (visibility change) for better persistence */
     transition-delay: 0s, 0.3s; 
     
     padding: 0;
     border-top: 1px solid var(--primary-color); 
 }
 
-/* Hide the close button when using pure CSS hover */
 .close-btn {
     display: none; 
 }
 
-/* CRITICAL: Show the panel if the category is hovered OR the panel itself is hovered */
-/* 1. Show when a category link is hovered */
 .category-item:hover .nav-bar-panel { 
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transition-delay: 0s; /* Appear instantly */
+    transition-delay: 0s; 
 }
 
-/* 2. Show if the mouse moves onto the panel itself */
 .nav-bar-panel:hover {
     opacity: 1;
     visibility: visible;
@@ -162,19 +125,14 @@ header {
     transition-delay: 0s;
 }
 
-
-/* Content wrapper inside the full-width panel (to center content) */
 .nav-bar-content-wrapper {
     display: grid;
     grid-template-columns: 1fr 3fr; 
     gap: 30px;
     
-    /* Constrain the content width to align with the main page content */
     max-width: 1300px; 
     margin: 0 auto; 
     
-    /* Inner padding */
-    /* FIX: Adjusted left padding to align the *entire* content block with the main header padding */
     padding: 25px 40px 25px var(--page-padding-x); 
     width: 100%;
 }
@@ -183,7 +141,6 @@ header {
 .view-all-column {
     border-right: 1px solid var(--bg-light);
     padding-right: 30px;
-    /* FIX: Removed explicit left padding here as it's now handled by the wrapper */
     padding-left: 0; 
 }
 
@@ -195,14 +152,12 @@ header {
     font-size: 1.1em;
 }
 
-/* --- Enhanced Subcategory Formatting --- */
 .subcategory-list {
     list-style: none;
     margin-left: 0; 
     display: grid; 
     grid-template-columns: repeat(3, 1fr);
     gap: 15px 30px;
-    /* FIX: Removed padding-left: 0 here to let the inherited alignment from the wrapper padding control the start point of the grid content. */
     padding-left: 0;
 }
 
@@ -224,19 +179,15 @@ header {
     background-color: var(--bg-light);
     text-decoration: none;
 }
-/* --- End Subcategory Formatting --- */
 
-
-/* --- 4. Home Page Content --- */
 .home-content {
     max-width: 1200px;
     margin: 40px auto;
-    /* FIX: Using new variable */
     padding: 0 var(--page-padding-x);
     text-align: center;
 }
 
-.hero-section {
+.lead-section {
     padding: 60px 20px;
     background-color: white; 
     border-radius: 8px;
@@ -244,24 +195,20 @@ header {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
-.hero-title {
+.lead-title {
     font-size: 2.5em;
     color: var(--secondary-color);
     margin-bottom: 10px;
 }
 
-.hero-subtitle {
+.lead-subtitle {
     font-size: 1.2em;
     color: var(--text-color);
 }
 
-
-/* --- 5. Product List Styles --- */
-
 .product-listing-content {
     max-width: 1300px;
     margin: 40px auto;
-    /* FIX: Using new variable */
     padding: 0 var(--page-padding-x);
 }
 
@@ -334,6 +281,18 @@ header {
     flex-grow: 1;
 }
 
+.stock-out {
+    color: #cc0000;
+    font-weight: bold;
+}
+.stock-low {
+    color: #ff8c00;
+    font-weight: 500;
+}
+.stock-available {
+    color: #28a745;
+}
+
 .add-to-cart-btn {
     background-color: var(--primary-color);
     color: white;
@@ -350,14 +309,11 @@ header {
     background-color: var(--secondary-color);
 }
 
-/* --- 6. Mobile Responsiveness (Hidden for simplicity) --- */
 @media (max-width: 768px) {
-    /* Hide the dropdown and rely on standard mobile navigation practices */
     .nav-bar-panel {
         display: none !important;
     }
     
-    /* Reduce header height on smaller screens */
     header {
         height: calc(var(--logo-bar-height) + var(--nav-bar-links-height) * 0.7);
     }

@@ -4,29 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Uses the dynamically generated title from the product_list_view -->
     <title>AuroraMart | {{ page_title }}</title>
-    <!-- Link the main CSS file -->
     <link rel="stylesheet" href="{% static 'onlinestore/css/style.css' %}">
 </head>
 <body>
     <header>
         <div class="logo"><a href="{% url 'landing_page' %}">AuroraMart</a></div>
-        
-        <!-- NAVBAR (Replicated from home.html/landing page) -->
-        <!-- This assumes MENU_DATA is correctly available via the Context Processor -->
         <nav id="main-nav-menu">
             {% for item in MENU_DATA %}
                 <div class="category-item">
                     <a href="#" class="nav-category-link">
                         {{ item.category.category_name }}
                     </a>
-                    
-                    <!-- Mega-Menu Panel for CSS-Only Hover -->
                     <div class="nav-bar-panel">
                         <div class="view-all-column">
-                            <!-- Link to view ALL products in this specific category -->
-                            <!-- Note: The product_list URL is used here -->
                             <a href="{% url 'product_list' %}?category={{ item.category.id }}" class="view-all-link">
                                 View All {{ item.category.category_name }}
                             </a>
@@ -34,7 +25,6 @@
                         <ul class="subcategory-list">
                             {% for subcat in item.subcategories %}
                                 <li>
-                                    <!-- Link to view products filtered by subcategory -->
                                     <a href="{% url 'product_list' %}?subcategory={{ subcat.id }}">
                                         {{ subcat.subcategory_name }}
                                     </a>
@@ -46,26 +36,27 @@
             {% endfor %}
         </nav>
     </header>
-    
-    <!-- MAIN PRODUCT CONTENT -->
     <main class="product-listing-content">
         
         <h1 class="page-header">{{ page_title }}</h1>
 
         {% if products %}
-            <!-- Product Grid: Styled using CSS provided previously -->
             <div class="product-grid">
                 {% for product in products %}
                     <div class="product-card">
                         <h2 class="product-name">{{ product.product_name }}</h2>
                         <p class="product-sku">SKU: {{ product.sku_code }}</p>
                         <p class="product-price">${{ product.unit_price }}</p>
-                        <!-- Display rating with a star icon/symbol -->
                         <p class="product-rating">Rating: ★ {{ product.product_rating|default:"N/A" }}</p>
-                        <p class="product-stock">Stock: {{ product.quantity_on_hand }} units</p>
-                        <!-- Truncate description for card view -->
-                        <p class="product-description">{{ product.product_description|truncatechars:100 }}</p>
-                        <button class="add-to-cart-btn">Add to Cart</button>
+                        
+                        {% if product.quantity_on_hand == 0 %}
+                            <p class="product-stock stock-out">Out of Stock</p>
+                        {% elif product.quantity_on_hand < 10 %}
+                            <p class="product-stock stock-low">Low Stock ({{ product.quantity_on_hand }} units)</p>
+                        {% else %}
+                            <p class="product-stock stock-available">Available</p>
+                        {% endif %}           
+                       <button class="add-to-cart-btn">Add to Cart</button>
                     </div>
                 {% endfor %}
             </div>

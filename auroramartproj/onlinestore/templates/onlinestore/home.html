@@ -4,28 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Ensure the title is descriptive for the home page -->
     <title>AuroraMart | Welcome Home</title> 
-    <!-- Link the main CSS file -->
     <link rel="stylesheet" href="{% static 'onlinestore/css/style.css' %}">
 </head>
 <body>
     <header>
         <div class="logo"><a href="{% url 'landing_page' %}">AuroraMart</a></div>
-        
-        <!-- NAVBAR (Identical, dynamic mega-menu structure) -->
-        <!-- This assumes MENU_DATA is correctly available via the Context Processor -->
         <nav id="main-nav-menu">
             {% for item in MENU_DATA %}
                 <div class="category-item">
                     <a href="#" class="nav-category-link">
                         {{ item.category.category_name }}
                     </a>
-                    
-                    <!-- Mega-Menu Panel for CSS-Only Hover -->
                     <div class="nav-bar-panel">
                         <div class="view-all-column">
-                            <!-- Link to view ALL products in this specific category -->
                             <a href="{% url 'product_list' %}?category={{ item.category.id }}" class="view-all-link">
                                 View All {{ item.category.category_name }}
                             </a>
@@ -33,7 +25,6 @@
                         <ul class="subcategory-list">
                             {% for subcat in item.subcategories %}
                                 <li>
-                                    <!-- Link to view products filtered by subcategory -->
                                     <a href="{% url 'product_list' %}?subcategory={{ subcat.id }}">
                                         {{ subcat.subcategory_name }}
                                     </a>
@@ -46,12 +37,10 @@
         </nav>
     </header>
     
-    <!-- MAIN HOME PAGE CONTENT (Currently blank, as requested) -->
     <main class="home-content">
-        <!-- Add a placeholder or call to action here -->
-        <div class="hero-section">
-            <h1 class="hero-title">Shop Everything, Find Your Passion.</h1>
-            <p class="hero-subtitle">Explore thousands of products across all our categories above.</p>
+        <div class="lead-section">
+            <h1 class="lead-title">Shop Everything, Find Your Passion.</h1>
+            <p class="lead-subtitle">Explore thousands of products across all our categories above.</p>
         </div>
     </main>
     
