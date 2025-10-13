@@ -59,6 +59,19 @@ header {
     color: var(--text-color);
 }
 
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    margin-left: 25px; /* Add space between logo and login button */
+}
+
+
+
 #main-nav-menu {
     display: flex;
     justify-content: flex-start;
@@ -307,7 +320,44 @@ header {
 
 .add-to-cart-btn:hover {
     background-color: var(--secondary-color);
+} 
+
+
+/* Product Detail Page Styles */
+.product-detail-content {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 var(--page-padding-x);
 }
+
+.product-detail-card {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+}
+
+.product-detail-card .product-name {
+    font-size: 2.2em;
+    color: var(--secondary-color);
+}
+
+.product-detail-card .product-description {
+    margin: 25px 0;
+}
+
+.product-detail-card .product-description h3 {
+    margin-bottom: 10px;
+    color: var(--text-color);
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.add-to-cart-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
 
 @media (max-width: 768px) {
     .nav-bar-panel {

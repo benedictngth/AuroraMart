@@ -1,48 +1,22 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuroraMart | Welcome Home</title> 
-    <link rel="stylesheet" href="{% static 'onlinestore/css/style.css' %}">
-</head>
-<body>
-    <header>
-        <div class="logo"><a href="{% url 'landing_page' %}">AuroraMart</a></div>
-        <nav id="main-nav-menu">
-            {% for item in MENU_DATA %}
-                <div class="category-item">
-                    <a href="#" class="nav-category-link">
-                        {{ item.category.category_name }}
-                    </a>
-                    <div class="nav-bar-panel">
-                        <div class="view-all-column">
-                            <a href="{% url 'product_list' %}?category={{ item.category.id }}" class="view-all-link">
-                                View All {{ item.category.category_name }}
-                            </a>
-                        </div>
-                        <ul class="subcategory-list">
-                            {% for subcat in item.subcategories %}
-                                <li>
-                                    <a href="{% url 'product_list' %}?subcategory={{ subcat.id }}">
-                                        {{ subcat.subcategory_name }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-            {% endfor %}
-        </nav>
-    </header>
-    
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AuroraMart | Welcome Home</title>
+    <link rel="stylesheet" href="{% static 'onlinestore/css/style.css' %}" />
+  </head>
+  <body>
+    {% include 'onlinestore/_navBar.html'%}
+
     <main class="home-content">
-        <div class="lead-section">
-            <h1 class="lead-title">Shop Everything, Find Your Passion.</h1>
-            <p class="lead-subtitle">Explore thousands of products across all our categories above.</p>
-        </div>
+      <div class="lead-section">
+        <h1 class="lead-title">Shop Everything, Find Your Passion.</h1>
+        <p class="lead-subtitle">
+          Explore thousands of products across all our categories above.
+        </p>
+      </div>
     </main>
-    
-</body>
+  </body>
 </html>

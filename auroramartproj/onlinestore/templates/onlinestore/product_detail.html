@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AuroraMart | {{ product.product_name }}</title>
+    <link rel="stylesheet" href="{% static 'onlinestore/css/style.css' %}" />
+  </head>
+  <body>
+    {% include 'onlinestore/_navBar.html'%}
+
+    <main class="product-detail-content">
+      <div class="product-detail-card">
+        <h1 class="product-name">{{ product.product_name }}</h1>
+        <p class="product-sku">SKU: {{ product.sku_code }}</p>
+        <p class="product-price">${{ product.unit_price }}</p>
+        <p class="product-rating">
+          Rating: ★ {{ product.product_rating|default:"N/A" }}
+        </p>
+
+        {% if product.quantity_on_hand == 0 %}
+        <p class="product-stock stock-out">Out of Stock</p>
+        {% elif product.quantity_on_hand < 10 %}
+        <p class="product-stock stock-low">
+          Low Stock ({{ product.quantity_on_hand }} remaining)
+        </p>
+        {% else %}
+        <p class="product-stock stock-available">In Stock</p>
+        {% endif %}
+        
+        <div class="product-description">
+          <h3>Description</h3>
+          <p>{{ product.product_description|linebreaks|default:"No description available." }}</p>
+        </div>
+        <p> Quantity Available: {{product.quantity_on_hand}}</p>
+        <button class="add-to-cart-btn" {% if product.quantity_on_hand == 0 %}disabled{% endif %}>Add to Cart</button>
+      </div>
+    </main>
+  </body>
+</html>

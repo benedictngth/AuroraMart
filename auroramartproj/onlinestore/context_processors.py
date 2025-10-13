@@ -11,5 +11,4 @@ def nav_bar_data(request):
             'subcategories': Subcategory.objects.filter(category=category).order_by('subcategory_name')
         }
         menu_data.append(menu_item)
-
     return {'MENU_DATA': menu_data}

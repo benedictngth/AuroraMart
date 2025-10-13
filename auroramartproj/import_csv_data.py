@@ -10,7 +10,7 @@ django.setup()
 from onlinestore.models import Product, Category, Subcategory
 
 # --- Configuration ---
-CSV_FILE_PATH = '/Users/zeevierrrr/Downloads/IS2108 - AY2526S1 - Pair Project/data/b2c_products_500.csv'
+CSV_FILE_PATH = './b2c_products_500.csv'
 
 def load_raw_data(file_path):
     """Loads CSV data into a list of dictionaries using the built-in csv module."""

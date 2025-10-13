@@ -1,70 +1,53 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AuroraMart | {{ page_title }}</title>
-    <link rel="stylesheet" href="{% static 'onlinestore/css/style.css' %}">
-</head>
-<body>
-    <header>
-        <div class="logo"><a href="{% url 'landing_page' %}">AuroraMart</a></div>
-        <nav id="main-nav-menu">
-            {% for item in MENU_DATA %}
-                <div class="category-item">
-                    <a href="#" class="nav-category-link">
-                        {{ item.category.category_name }}
-                    </a>
-                    <div class="nav-bar-panel">
-                        <div class="view-all-column">
-                            <a href="{% url 'product_list' %}?category={{ item.category.id }}" class="view-all-link">
-                                View All {{ item.category.category_name }}
-                            </a>
-                        </div>
-                        <ul class="subcategory-list">
-                            {% for subcat in item.subcategories %}
-                                <li>
-                                    <a href="{% url 'product_list' %}?subcategory={{ subcat.id }}">
-                                        {{ subcat.subcategory_name }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-            {% endfor %}
-        </nav>
-    </header>
+    <link rel="stylesheet" href="{% static 'onlinestore/css/style.css' %}" />
+  </head>
+  <body>
+    {% include 'onlinestore/_navBar.html'%}
+
     <main class="product-listing-content">
-        
-        <h1 class="page-header">{{ page_title }}</h1>
+      <h1 class="page-header">{{ page_title }}</h1>
 
-        {% if products %}
-            <div class="product-grid">
-                {% for product in products %}
-                    <div class="product-card">
-                        <h2 class="product-name">{{ product.product_name }}</h2>
-                        <p class="product-sku">SKU: {{ product.sku_code }}</p>
-                        <p class="product-price">${{ product.unit_price }}</p>
-                        <p class="product-rating">Rating: ★ {{ product.product_rating|default:"N/A" }}</p>
-                        
-                        {% if product.quantity_on_hand == 0 %}
-                            <p class="product-stock stock-out">Out of Stock</p>
-                        {% elif product.quantity_on_hand < 10 %}
-                            <p class="product-stock stock-low">Low Stock ({{ product.quantity_on_hand }} units)</p>
-                        {% else %}
-                            <p class="product-stock stock-available">Available</p>
-                        {% endif %}           
-                       <button class="add-to-cart-btn">Add to Cart</button>
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <p class="no-results">Sorry, no products were found matching your criteria.</p>
-        {% endif %}
+      {% if products %}
+      <div class="product-grid">
+        {% for product in products %}
+        <div class="product-card">
+          <h2 class="product-name">
+            {% if product.pk %}
+            <a href="{% url 'product_detail' product.pk %}"
+              >{{ product.product_name }}</a
+            >
+            {% else %} {{ product.product_name }} (Invalid Product) {% endif %}
+          </h2>
+          <p class="product-sku">SKU: {{ product.sku_code }}</p>
+          <p class="product-price">${{ product.unit_price }}</p>
+          <p class="product-rating">
+            Rating: ★ {{ product.product_rating|default:"N/A" }}
+          </p>
 
+          {% if product.quantity_on_hand == 0 %}
+          <p class="product-stock stock-out">Out of Stock</p>
+          {% elif product.quantity_on_hand < 10 %}
+          <p class="product-stock stock-low">
+            Low Stock ({{ product.quantity_on_hand }} units)
+          </p>
+          {% else %}
+          <p class="product-stock stock-available">Available</p>
+          {% endif %}
+          <button class="add-to-cart-btn">Add to Cart</button>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="no-results">
+        Sorry, no products were found matching your criteria.
+      </p>
+      {% endif %}
     </main>
-
-</body>
+  </body>
 </html>
