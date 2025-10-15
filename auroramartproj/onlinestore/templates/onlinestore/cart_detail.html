@@ -19,7 +19,11 @@
           {% for item in cart_items %}
           <div class="cart-item-card">
             <div class="cart-item-details">
-              <h3 class="product-name">{{ item.product.product_name }}</h3>
+              <h3 class="product-name">
+                <a href="{% url 'product_detail' item.product.pk %}">
+                  {{ item.product.product_name }}</a
+                >
+              </h3>
               <p>Price: ${{ item.product.unit_price }}</p>
               <p>Quantity: {{ item.quantity }}</p>
               <p>Subtotal: ${{ item.item_subtotal }}</p>
