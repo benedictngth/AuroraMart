@@ -28,13 +28,23 @@
         {% else %}
         <p class="product-stock stock-available">In Stock</p>
         {% endif %}
-        
+
         <div class="product-description">
           <h3>Description</h3>
-          <p>{{ product.product_description|linebreaks|default:"No description available." }}</p>
+          <p>
+            {{ product.product_description|linebreaks|default:"No description available." }}
+          </p>
         </div>
-        <p> Quantity Available: {{product.quantity_on_hand}}</p>
-        <button class="add-to-cart-btn" {% if product.quantity_on_hand == 0 %}disabled{% endif %}>Add to Cart</button>
+
+        <form action="{% url 'add_to_cart' product.pk %}" method="post" class="add-to-cart-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="quantity">Quantity:</label>
+                <input type="number" name="quantity" id="quantity" value="1" min="1" max="{{ product.quantity_on_hand }}">
+            </div>
+            <button type="submit" class="add-to-cart-btn" {% if product.quantity_on_hand == 0 %}disabled{% endif %}>Add to Cart</button>
+        </form>
+
       </div>
     </main>
   </body>

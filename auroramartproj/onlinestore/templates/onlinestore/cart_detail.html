@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AuroraMart | Your Shopping Cart</title>
+    <link rel="stylesheet" href="{% static 'onlinestore/css/style.css' %}" />
+  </head>
+  <body>
+    {% include 'onlinestore/_navBar.html' %}
+
+    <main class="cart-content">
+      <h1 class="page-header">Your Shopping Cart</h1>
+
+      {% if cart_items %}
+      <div class="cart-container">
+        <div class="cart-items">
+          {% for item in cart_items %}
+          <div class="cart-item-card">
+            <div class="cart-item-details">
+              <h3 class="product-name">{{ item.product.product_name }}</h3>
+              <p>Price: ${{ item.product.unit_price }}</p>
+              <p>Quantity: {{ item.quantity }}</p>
+              <p>Subtotal: ${{ item.item_subtotal }}</p>
+            </div>
+            <div class="cart-item-actions">
+              <a
+                href="{% url 'remove_from_cart' item.product.pk %}"
+                class="remove-btn"
+                >Remove</a
+              >
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="cart-summary">
+          <h3>Cart Summary</h3>
+          <p>Grand Total: <strong>${{ grand_total }}</strong></p>
+          <button class="checkout-btn">Proceed to Checkout</button>
+        </div>
+      </div>
+      {% else %}
+      <p class="no-results">Your cart is empty.</p>
+      <a href="{% url 'product_list' %}" class="continue-shopping-btn"
+        >Continue Shopping</a
+      >
+      {% endif %}
+    </main>
+  </body>
+</html>
