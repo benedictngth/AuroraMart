@@ -3,7 +3,13 @@
   <div class="header-left">
     <div class="logo"><a href="{% url 'landing_page' %}">AuroraMart</a></div>
     <div class="header-actions">
-      <a href="{% url 'login' %}" class="login-btn">Login</a>
+      {% if user.is_authenticated %}
+      <span class="welcome-msg">Welcome, {{user.username}} &nbsp </span>
+      <a href="{% url 'logout' %}" class="login-btn">Logout</a>
+      {% else %}
+      <a href="{% url 'login' %}" class="login-btn">Login &nbsp</a>
+      <a href="{% url 'register' %}" class="register-btn">Register</a>
+      {% endif %}
     </div>
   </div>
 

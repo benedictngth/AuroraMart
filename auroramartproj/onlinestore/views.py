@@ -1,11 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Product
-
-# Create your views here.
+from django.contrib.auth.decorators import login_required
 
 def landing_page(request):
     return render(request, 'onlinestore/home.html')
 
+@login_required
 def product_list(request):
 
     products = Product.objects.all()
@@ -31,6 +31,7 @@ def product_list(request):
     }
     return render(request, 'onlinestore/product_list.html', context) 
 
+@login_required
 def product_detail(request, product_pk):
     product = get_object_or_404(Product, pk = product_pk)
     context = {
@@ -39,5 +40,3 @@ def product_detail(request, product_pk):
     return render(request, "onlinestore/product_detail.html", context) 
 
 
-def login_view(request):
-    return render(request, 'onlinestore/login.html')

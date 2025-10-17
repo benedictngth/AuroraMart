@@ -4,18 +4,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AuroraMart | Login</title>
+    <title>AuroraMart | Complete Your Profile</title>
     <link rel="stylesheet" href="{% static 'onlinestore/css/style.css' %}" />
   </head>
   <body>
     {% include 'onlinestore/_navBar.html' %}
-
     <main class="login-content">
       <div class="login-container">
-        <h2>Login to Your Account</h2>
+        <h2>Step 2: Complete Your Profile (Optional)</h2>
+        <p>You can fill this out now, or skip and do it later.</p>
         <form method="post">
           {% csrf_token %} {{ form }}
-          <button type="submit" class="submit-btn">Login</button>
+          <button type="submit" class="submit-btn">Save Profile</button>
         </form>
       </div>
     </main>
