@@ -27,80 +27,141 @@
       {% endif %}
       
       {% if products %}
-      <div class="product-grid">
-        {% for product in products %}
-        <div class="product-card">
-          <h2 class="product-name">
-            {% if product.pk %}
-            <a href="{% url 'product_detail' product.pk %}?{% if category_id %}category={{ category_id }}{% endif %}{% if subcategory_id %}&subcategory={{ subcategory_id }}{% endif %}">
-              {{ product.product_name }}
-            </a>
-            {% else %} {{ product.product_name }} (Invalid Product) {% endif %}
-          </h2>
-          <p class="product-sku">SKU: {{ product.sku_code }}</p>
-          <p class="product-price">${{ product.unit_price }}</p>
-          <p class="product-rating">
-            Rating: ★ {{ product.product_rating|default:"N/A" }}
-          </p>
+      <div class="product-page-layout">
+        <div class="filter-sidebar">
+          <h2>Filter Products</h2>
 
-          {% if product.quantity_on_hand == 0 %}
-          <p class="product-stock stock-out">Out of Stock</p>
-          {% elif product.quantity_on_hand < 10 %}
-          <p class="product-stock stock-low">
-            Low Stock ({{ product.quantity_on_hand }} units)
-          </p>
-          {% else %}
-          <p class="product-stock stock-available">Available</p>
-          {% endif %}
-          <div class="product-actions" id="product-actions-{{ product.sku_code }}">
-            <a href="{% url 'product_detail' product_pk=product.pk %}?{% if category_id %}category={{ category_id }}{% endif %}{% if subcategory_id %}&subcategory={{ subcategory_id }}{% endif %}" class="view-details-link">
-              <button class="view-details-btn" type="button">View Details</button>
-            </a>
+          <form method="get" id="filter-form">
 
-            {% if product.cart_quantity > 0 %}
-                <form 
-                    action="{% url 'add_to_cart' product_pk=product.pk %}" 
-                    method="post" 
-                    class="quantity-form"
-                    data-product-max="{{ product.quantity_on_hand }}"
-                >
-                    {% csrf_token %}
-                    {% if request.GET.category %}
-                        <input type="hidden" name="category" value="{{ request.GET.category }}">
-                    {% endif %}
-                    {% if request.GET.subcategory %}
-                        <input type="hidden" name="subcategory" value="{{ request.GET.subcategory }}">
-                    {% endif %}
-                    <div class="quantity-controls">
-                        <button type="button" class="quantity-minus-btn" data-sku="{{ product.sku_code }}">-</button>
-                        <span class="quantity-display" id="qty-display-{{ product.sku_code }}">{{ product.cart_quantity }}</span>
-                        <button type="button" class="quantity-plus-btn" data-sku="{{ product.sku_code }}">+</button>
-                    </div>
-
-                    <input type="hidden" name="quantity" id="qty-input-{{ product.sku_code }}" value="{{ product.cart_quantity }}">
-                    <input type="hidden" name="update" value="True"> 
-                </form>
-            {% else %}
-                <form action="{% url 'add_to_cart' product_pk=product.pk %}" method="post" class="add-to-cart-form-initial">
-                    {% csrf_token %}
-                    {% if request.GET.category %}
-                        <input type="hidden" name="category" value="{{ request.GET.category }}">
-                    {% endif %}
-
-                    {% if request.GET.subcategory %}
-                        <input type="hidden" name="subcategory" value="{{ request.GET.subcategory }}">
-                    {% endif %}
-
-                    <input type="hidden" name="quantity" value="1">
-                    <button type="submit" class="add-to-cart-btn-initial" 
-                            {% if product.quantity_on_hand == 0 %}disabled{% endif %}>
-                        Add to Cart
-                    </button>
-                </form>
+            {% if category_id %}
+              <input type="hidden" name="category" value="{{ category_id }}">
             {% endif %}
-          </div>
+            {% if subcategory_id %}
+              <input type="hidden" name="subcategory" value="{{ subcategory_id }}">
+            {% endif %}
+            {% if request.GET.sort %}
+                <input type="hidden" name="sort" value="{{ request.GET.sort }}">
+            {% endif %}
+
+            <div class="filter-group">
+                <label for="{{ filter_form.min_rating.id_for_label }}">Minimum Rating</label>
+                {{ filter_form.min_rating }}
+            </div>
+
+            <div class="filter-group">
+                <label for="{{ filter_form.price_range.id_for_label }}">Price Range</label>
+                {{ filter_form.price_range }}
+            </div>
+
+            <button type="button" onclick="clearFilters()" class="view-details-btn" style="width: 100%; margin-top: 10px; background-color: #f0ad4e;">Clear Filters</button>
+
+          </form>
+      </div>
+
+      <div class="product-content-area">
+        <div class="product-listing-header">
+          <p class="product-count">
+            Showing <strong>{{ total_count }}</strong> products.
+          </p>
+
+          <form method="get" class="sort-controls" id="sort-form">
+            <label for="id_sort" class="sort-label">Sort By:</label>
+            
+            {{ sort_form.sort }}
+            
+            {% if category_id %}
+              <input type="hidden" name="category" value="{{ category_id }}">
+            {% endif %}
+            {% if subcategory_id %}
+              <input type="hidden" name="subcategory" value="{{ subcategory_id }}">
+            {% endif %}
+            {% if request.GET.min_rating %}
+                <input type="hidden" name="min_rating" value="{{ request.GET.min_rating }}">
+            {% endif %}
+            {% if request.GET.price_range %}
+                <input type="hidden" name="price_range" value="{{ request.GET.price_range }}">
+            {% endif %}
+          </form>
         </div>
-        {% endfor %}
+
+        <div class="product-grid">
+          {% for product in products %}
+          <div class="product-card">
+            <h2 class="product-name">
+              {% if product.pk %}
+              <a href="{% url 'product_detail' product.pk %}?{% if category_id %}category={{ category_id }}{% endif %}{% if subcategory_id %}&subcategory={{ subcategory_id }}{% endif %}">
+                {{ product.product_name }}
+              </a>
+              {% else %} {{ product.product_name }} (Invalid Product) {% endif %}
+            </h2>
+            <p class="product-sku">SKU: {{ product.sku_code }}</p>
+            <p class="product-price">${{ product.unit_price }}</p>
+            <p class="product-rating">
+              Rating: ★ {{ product.product_rating|default:"N/A" }}
+            </p>
+
+            {% if product.quantity_on_hand == 0 %}
+            <p class="product-stock stock-out">Out of Stock</p>
+            {% elif product.quantity_on_hand < 10 %}
+            <p class="product-stock stock-low">
+              Low Stock ({{ product.quantity_on_hand }} units)
+            </p>
+            {% else %}
+            <p class="product-stock stock-available">Available</p>
+            {% endif %}
+            <div class="product-actions" id="product-actions-{{ product.sku_code }}">
+              <a href="{% url 'product_detail' product_pk=product.pk %}?{% if category_id %}category={{ category_id }}{% endif %}{% if subcategory_id %}&subcategory={{ subcategory_id }}{% endif %}" class="view-details-link">
+                <button class="view-details-btn" type="button">View Details</button>
+              </a>
+
+              {% if product.cart_quantity > 0 %}
+                  <form 
+                      action="{% url 'add_to_cart' product_pk=product.pk %}" 
+                      method="post" 
+                      class="quantity-form"
+                      data-product-max="{{ product.quantity_on_hand }}"
+                  >
+                      {% csrf_token %}
+                      {% if request.GET.category %}
+                          <input type="hidden" name="category" value="{{ request.GET.category }}">
+                      {% endif %}
+                      {% if request.GET.subcategory %}
+                          <input type="hidden" name="subcategory" value="{{ request.GET.subcategory }}">
+                      {% endif %}
+                      <div class="quantity-controls">
+                          <button type="button" class="quantity-minus-btn" data-sku="{{ product.sku_code }}">-</button>
+                          <span class="quantity-display" id="qty-display-{{ product.sku_code }}">{{ product.cart_quantity }}</span>
+                          <button type="button" class="quantity-plus-btn" data-sku="{{ product.sku_code }}">+</button>
+                      </div>
+
+                      <input type="hidden" name="quantity" id="qty-input-{{ product.sku_code }}" value="{{ product.cart_quantity }}">
+                      <input type="hidden" name="update" value="True"> 
+                  </form>
+              {% else %}
+                  <form action="{% url 'add_to_cart' product_pk=product.pk %}" method="post" class="add-to-cart-form-initial">
+                      {% csrf_token %}
+                      {% if request.GET.category %}
+                          <input type="hidden" name="category" value="{{ request.GET.category }}">
+                      {% endif %}
+
+                      {% if request.GET.subcategory %}
+                          <input type="hidden" name="subcategory" value="{{ request.GET.subcategory }}">
+                      {% endif %}
+
+                      <input type="hidden" name="quantity" value="1">
+                      <button type="submit" class="add-to-cart-btn-initial" 
+                              {% if product.quantity_on_hand == 0 %}disabled{% endif %}>
+                          Add to Cart
+                      </button>
+                  </form>
+              {% endif %}
+              </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+        </div>
       </div>
       {% else %}
       <p class="no-results">
@@ -110,10 +171,35 @@
     </main>
 
     <script>
+      function clearFilters() {
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams();
+
+        const categoryId = url.searchParams.get('category');
+        const subcategoryId = url.searchParams.get('subcategory');
+
+        if (categoryId) {
+            params.set('category', categoryId);
+        }
+        if (subcategoryId) {
+            params.set('subcategory', subcategoryId);
+        }
+        
+        window.location.href = url.pathname + (params.toString() ? '?' + params.toString() : '');
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
           const productGrid = document.querySelector('.product-grid');
-
           if (!productGrid) return; 
+
+          const sortSelect = document.getElementById('id_sort');
+
+          if (sortSelect) {
+            sortSelect.addEventListener('change', () => {
+              document.getElementById('sort-form').submit();
+            });
+          }
+
 
           productGrid.addEventListener('click', (event) => {
               let button = event.target;

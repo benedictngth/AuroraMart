@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User 
-from .models import CustomerProfile
+from .models import CustomerProfile, Category, Subcategory
+
 
 class RegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
@@ -38,3 +39,74 @@ class CustomerProfileForm(forms.ModelForm):
         widgets = {
             'gender': forms.Select(choices = GENDER_CHOICES)
         }
+
+class ProductSortForm(forms.Form):
+
+    SORT_CHOICES = (
+        ('name_asc', 'Name (A-Z)'),
+        ('name_desc', 'Name (Z-A)'),
+        ('price_asc', 'Price (Low to High)'),
+        ('price_desc', 'Price (High to Low)'),
+        ('rating_desc', 'Rating (High to Low)'),
+        ('rating_asc', 'Rating (Low to High)'),
+    )
+
+    sort = forms.ChoiceField(
+        choices=SORT_CHOICES,
+        required=False,
+        label="Sort By",
+    )
+
+    category = forms.IntegerField(required=False)
+    subcategory = forms.IntegerField(required=False)
+
+    def clean_sort(self):
+        sort_value = self.cleaned_data.get('sort')
+        if not sort_value:
+            return 'name_asc'
+        return sort_value
+    
+class ProductFilterForm(forms.Form):
+    RATING_CHOICES = [
+        ('', 'Any Rating'),
+        (4, '★★★★ & Up'),
+        (3, '★★★ & Up'),
+        (2, '★★ & Up'),
+        (1, '★ & Up'),
+    ]
+    
+    PRICE_CHOICES = [
+        ('', 'Any Price'),
+        ('0-25', 'Under $25'),
+        ('25-50', '$25 - $50'),
+        ('50-100', '$50 - $100'),
+        ('100-max', '$100 & Over'),
+    ]
+    
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        required=False,
+        empty_label="All Categories",
+        widget=forms.HiddenInput()
+    )
+
+    subcategory = forms.ModelChoiceField(
+        queryset=Subcategory.objects.all(),
+        required=False,
+        empty_label="All Subcategories",
+        widget=forms.HiddenInput()
+    )
+
+    min_rating = forms.ChoiceField(
+        choices=RATING_CHOICES,
+        required=False,
+        label="Minimum Rating",
+        widget=forms.Select(attrs={'onchange': 'document.getElementById("filter-form").submit();'})
+    )
+
+    price_range = forms.ChoiceField(
+        choices=PRICE_CHOICES,
+        required=False,
+        label="Price Range",
+        widget=forms.Select(attrs={'onchange': 'document.getElementById("filter-form").submit();'})
+    )
