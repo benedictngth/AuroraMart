@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Product
+from .models import Product, Category, Subcategory
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 def landing_page(request):
     return render(request, 'onlinestore/home.html')
@@ -10,20 +11,51 @@ def product_list(request):
 
     products = Product.objects.all()
     title = "All Products"
+
+    breadcrumb = [{'name': 'All Products', 'url': reverse('product_list')}]
     
-    # Check for Category filter
     category_id = request.GET.get('category')
-    if category_id:
-        products = products.filter(category__id=category_id)
-        category_name = products.first().category.category_name if products.exists() else "Category"
-        title = f"Products in {category_name}"
-        
-    # Check for Subcategory filter
     subcategory_id = request.GET.get('subcategory')
+
     if subcategory_id:
-        products = products.filter(subcategory__id=subcategory_id)
-        subcategory_name = products.first().subcategory.subcategory_name if products.exists() else "Subcategory"
-        title = f"Products in {subcategory_name}"
+        try:
+            subcategory_obj = Subcategory.objects.get(id=subcategory_id)
+            products = products.filter(subcategory=subcategory_obj)
+
+            subcategory_name = subcategory_obj.subcategory_name
+            title = f"Products in {subcategory_name}"
+
+            parent_category = subcategory_obj.category
+            breadcrumb.append({
+                'name': parent_category.category_name, 
+                'url': f"{reverse('product_list')}?category={parent_category.id}"
+            })
+            
+            breadcrumb.append({
+                'name': subcategory_name, 
+                'url': f"{reverse('product_list')}?subcategory={subcategory_obj.id}"
+            })
+
+        except Subcategory.DoesNotExist:
+             # Handle case where subcategory ID is invalid
+             title = "Products (Filter Not Found)"
+
+    elif category_id:
+        try:
+            category_obj = Category.objects.get(id=category_id)
+            products = products.filter(category=category_obj)
+
+            category_name = category_obj.category_name
+            title = f"Products in {category_name}"
+
+            breadcrumb.append({
+                'name': category_name, 
+                'url': f"{reverse('product_list')}?category={category_obj.id}"
+            })
+
+        except Category.DoesNotExist:
+            # Handle case where category ID is invalid
+            title = "Products (Filter Not Found)"
 
     cart = request.session.get('cart', {})
     updated_products = []
@@ -40,8 +72,7 @@ def product_list(request):
     context = {
         'products': products,
         'page_title': title,
-        'category_id': category_id,
-        'subcategory_id': subcategory_id
+        'breadcrumb': breadcrumb
     }
     return render(request, 'onlinestore/product_list.html', context) 
 

@@ -15,6 +15,17 @@
     <main class="product-listing-content">
       <h1 class="page-header">{{ page_title }}</h1>
 
+      {% if breadcrumb and breadcrumb|length > 1 %}
+        <div class="breadcrumb-trail">
+        {% for item in breadcrumb %}
+          <a href="{{ item.url }}" class="breadcrumb-link">{{ item.name }}</a>
+          {% if not forloop.last %}
+            <span class="breadcrumb-separator">></span>
+          {% endif %}
+        {% endfor %}
+        </div>
+      {% endif %}
+      
       {% if products %}
       <div class="product-grid">
         {% for product in products %}
