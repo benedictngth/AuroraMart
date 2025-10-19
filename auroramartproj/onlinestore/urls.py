@@ -14,7 +14,7 @@ urlpatterns = [
     
     #cart urls
     path("cart/", views_cart.cart_detail, name = "cart_detail"),
-    path("cart/add/<str:product_sku>/", views_cart.add_to_cart, name = "add_to_cart"),
+    path("cart/add/<str:product_pk>/", views_cart.add_to_cart, name = "add_to_cart"),
     path("cart/remove/<str:product_pk>/", views_cart.remove_from_cart, name="remove_from_cart"), 
 
     #auth urls

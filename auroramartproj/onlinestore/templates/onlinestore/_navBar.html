@@ -16,18 +16,10 @@
   <nav id="main-nav-menu">
     {% for item in MENU_DATA %}
     <div class="category-item">
-      <a href="#" class="nav-category-link">
+      <a href="{% url 'product_list' %}?category={{ item.category.id }}" class="nav-category-link">
         {{ item.category.category_name }}
       </a>
       <div class="nav-bar-panel">
-        <div class="view-all-column">
-          <a
-            href="{% url 'product_list' %}?category={{ item.category.id }}"
-            class="view-all-link"
-          >
-            View All {{ item.category.category_name }}
-          </a>
-        </div>
         <ul class="subcategory-list">
           {% for subcat in item.subcategories %}
           <li>
@@ -40,5 +32,15 @@
       </div>
     </div>
     {% endfor %}
+
+    <div class="cart-link-container">
+        <a href="{% url 'cart_detail' %}" class="cart-icon-link">
+            <span style="font-size: 24px;">🛒</span>
+            
+            {% if cart_total_quantity > 0 %}
+                <span class="cart-count">{{ cart_total_quantity }}</span>
+            {% endif %}
+        </a>
+    </div>
   </nav>
 </header>
