@@ -53,7 +53,7 @@
                 {{ filter_form.price_range }}
             </div>
 
-            <button type="button" onclick="clearFilters()" class="view-details-btn" style="width: 100%; margin-top: 10px; background-color: #f0ad4e;">Clear Filters</button>
+            <a href="{% url 'product_list' %}?{% if category_id %}category={{ category_id }}{% endif %}{% if subcategory_id %}&subcategory={{ subcategory_id }}{% endif %}" class="view-details-btn" style="width: 100%; margin-top: 10px; background-color: #f0ad4e; text-align: center;">Clear Filters</a>
 
           </form>
       </div>
@@ -81,6 +81,8 @@
             {% if request.GET.price_range %}
                 <input type="hidden" name="price_range" value="{{ request.GET.price_range }}">
             {% endif %}
+
+            <button type="submit" class="sort-submit-btn">Sort</button>
           </form>
         </div>
 
@@ -115,28 +117,10 @@
               </a>
 
               {% if product.cart_quantity > 0 %}
-                  <form 
-                      action="{% url 'add_to_cart' product_pk=product.pk %}" 
-                      method="post" 
-                      class="quantity-form"
-                      data-product-max="{{ product.quantity_on_hand }}"
-                  >
-                      {% csrf_token %}
-                      {% if request.GET.category %}
-                          <input type="hidden" name="category" value="{{ request.GET.category }}">
-                      {% endif %}
-                      {% if request.GET.subcategory %}
-                          <input type="hidden" name="subcategory" value="{{ request.GET.subcategory }}">
-                      {% endif %}
-                      <div class="quantity-controls">
-                          <button type="button" class="quantity-minus-btn" data-sku="{{ product.sku_code }}">-</button>
-                          <span class="quantity-display" id="qty-display-{{ product.sku_code }}">{{ product.cart_quantity }}</span>
-                          <button type="button" class="quantity-plus-btn" data-sku="{{ product.sku_code }}">+</button>
-                      </div>
-
-                      <input type="hidden" name="quantity" id="qty-input-{{ product.sku_code }}" value="{{ product.cart_quantity }}">
-                      <input type="hidden" name="update" value="True"> 
-                  </form>
+                  <div class="in-cart-info">
+                      <p>In Cart: {{ product.cart_quantity }}</p>
+                      <a href="{% url 'cart_detail' %}" class="edit-in-cart-link">Edit in Cart</a>
+                  </div>
               {% else %}
                   <form action="{% url 'add_to_cart' product_pk=product.pk %}" method="post" class="add-to-cart-form-initial">
                       {% csrf_token %}
@@ -170,76 +154,5 @@
       {% endif %}
     </main>
 
-    <script>
-      function clearFilters() {
-        const url = new URL(window.location.href);
-        const params = new URLSearchParams();
-
-        const categoryId = url.searchParams.get('category');
-        const subcategoryId = url.searchParams.get('subcategory');
-
-        if (categoryId) {
-            params.set('category', categoryId);
-        }
-        if (subcategoryId) {
-            params.set('subcategory', subcategoryId);
-        }
-        
-        window.location.href = url.pathname + (params.toString() ? '?' + params.toString() : '');
-      }
-
-      document.addEventListener('DOMContentLoaded', () => {
-          const productGrid = document.querySelector('.product-grid');
-          if (!productGrid) return; 
-
-          const sortSelect = document.getElementById('id_sort');
-
-          if (sortSelect) {
-            sortSelect.addEventListener('change', () => {
-              document.getElementById('sort-form').submit();
-            });
-          }
-
-
-          productGrid.addEventListener('click', (event) => {
-              let button = event.target;
-              let increment;
-
-              if (button.classList.contains('quantity-plus-btn')) {
-                  increment = 1;
-              } else if (button.classList.contains('quantity-minus-btn')) {
-                  increment = -1;
-              } else {
-                  return;
-              }
-
-              const form = button.closest('.quantity-form');
-              if (!form) return;
-
-              const sku = button.dataset.sku;
-              const hiddenInput = document.getElementById(`qty-input-${sku}`);
-              const display = document.getElementById(`qty-display-${sku}`);
-              
-              const maxQuantity = parseInt(form.getAttribute('data-product-max'), 10);
-              
-              let currentQuantity = parseInt(hiddenInput.value, 10);
-              let newQuantity = currentQuantity + increment;
-              
-              if (newQuantity < 0) {
-                  newQuantity = 0; 
-              } 
-              
-              if (newQuantity > maxQuantity) {
-                  console.warn("Cannot add more than stock on hand.");
-                  return; 
-              }
-
-              display.textContent = newQuantity;
-              hiddenInput.value = newQuantity;
-
-              form.submit();
-          });
-      });
-    </script>
   </body>
 </html>

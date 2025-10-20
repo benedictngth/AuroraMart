@@ -7,7 +7,6 @@ from urllib.parse import urlencode
 from .models import Product
 
 
-@require_POST
 def add_to_cart(request, product_pk):
     cart = request.session.get('cart', {})
     product = get_object_or_404(Product, pk=str(product_pk)) 
@@ -55,7 +54,6 @@ def add_to_cart(request, product_pk):
     if query_params:
         url += '?' + urlencode(query_params)
         
-    # 4. Unconditional redirect to the constructed URL (either filtered or unfiltered)
     return redirect(url)
 
 def cart_detail(request):

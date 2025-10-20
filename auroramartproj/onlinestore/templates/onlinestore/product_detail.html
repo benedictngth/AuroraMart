@@ -57,16 +57,12 @@
             <div class="form-group">
                 <label for="quantity">Quantity:</label>
                 
-                <div class="quantity-controls">
-                    <button type="button" class="quantity-minus-btn" data-sku="{{ product.sku_code }}">-</button>
-                    <span class="quantity-display" id="qty-display-{{ product.sku_code }}">{{ cart_quantity|default:1 }}</span>
-                     <button type="button" class="quantity-plus-btn" data-sku="{{ product.sku_code }}">+</button>
-                </div>
-
-                <input type="hidden" name="quantity" id="qty-input-{{ product.sku_code }}" 
-                    value="{{ cart_quantity|default:1 }}" 
-                    min="0" 
-                    max="{{ product.quantity_on_hand }}"
+                <input type="number" 
+                       name="quantity" 
+                       value="{{ cart_quantity|default:1 }}" 
+                       min="1" 
+                       max="{{ product.quantity_on_hand }}"
+                       class="quantity-input"
                 >
             </div>
             <button type="submit" class="add-to-cart-btn" {% if product.quantity_on_hand == 0 %}disabled{% endif %}>
@@ -76,53 +72,6 @@
 
       </div>
     </main>
-
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-          const form = document.querySelector('.add-to-cart-form');
-          if (!form) return;
-
-          const hiddenInput = form.querySelector('[name="quantity"]');
-          const display = form.querySelector('.quantity-display');
-          const maxQuantity = parseInt(form.dataset.productMax, 10);
-          
-          function updateQuantity(increment) {
-              let currentQuantity = parseInt(hiddenInput.value, 10);
-              let newQuantity = currentQuantity + increment;
-              
-              if (newQuantity < 0) {
-                  newQuantity = 0; 
-              } 
-              
-              if (newQuantity > maxQuantity) {
-                  console.warn("Cannot add more than stock on hand.");
-                  return;
-              }
-
-              display.textContent = newQuantity;
-              hiddenInput.value = newQuantity;
-
-              const submitBtn = form.querySelector('.add-to-cart-btn');
-              if (newQuantity === 0) {
-                  submitBtn.textContent = 'Remove from Cart';
-              } else if (currentQuantity === 0 && newQuantity > 0) {
-                  submitBtn.textContent = 'Add to Cart';
-              } else {
-                  submitBtn.textContent = 'Update Cart';
-              }
-          }
-
-          form.querySelector('.quantity-plus-btn').addEventListener('click', (event) => {
-              event.preventDefault();
-              updateQuantity(1);
-          });
-
-          form.querySelector('.quantity-minus-btn').addEventListener('click', (event) => {
-              event.preventDefault();
-              updateQuantity(-1);
-          });
-      });
-    </script>
 
   </body>
 </html>
