@@ -68,7 +68,26 @@
             <button type="submit" class="add-to-cart-btn" {% if product.quantity_on_hand == 0 %}disabled{% endif %}>
                 {% if cart_quantity > 0 %}Update Cart{% else %}Add to Cart{% endif %}
             </button>
-        </form>
+        </form> 
+
+        {% if recommendations %}
+        <div class="recommendations-section">
+          <h3>You might also like</h3>
+          <ul class="recommendations-grid">
+            {% for recommendation in recommendations %}
+            <li class="recommendation-item">
+              <a href="{% url 'product_detail' product_pk=recommendation.product_sku %}?subcategory={{recommendation.product_subcategory}}">
+          {{ recommendation.product_name }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div> 
+        {% else %}
+        <div class = "no-recommendation">
+          <h3> Unable to find recommendations</h3>
+        </div>
+        {% endif %}
 
       </div>
     </main>

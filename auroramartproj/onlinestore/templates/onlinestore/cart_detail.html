@@ -25,6 +25,7 @@
               <th>Item</th>
               <th>Price</th>
               <th>Quantity</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -62,12 +63,21 @@
                   <button type="submit" class="update-cart-btn">Update</button>
                 </form>
               </td>
+              <td>
+                <form
+                  action="{% url 'remove_from_cart' product_pk=item.product.sku_code %}"
+                  method="post"
+                >
+                  {% csrf_token %}
+                  <button type="submit" class="remove-btn">Remove</button>
+                </form>
+              </td>
             </tr>
             {% endfor %}
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="2" class="total-row">Grand Total:</td>
+              <td colspan="3" class="total-row">Grand Total:</td>
               <td class="total-row" style="text-align: right">
                 ${{ grand_total | floatformat:2 }}
               </td>
@@ -86,56 +96,5 @@
       >
       {% endif %}
     </main>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const cartContainer = document.querySelector(".cart-container");
-
-        if (!cartContainer) return; // exit if cart is empty
-
-        cartContainer.addEventListener("click", (event) => {
-          let button = event.target;
-          let increment;
-
-          // quantity action based on button clicked
-          if (button.classList.contains("quantity-plus-btn")) {
-            increment = 1;
-          } else if (button.classList.contains("quantity-minus-btn")) {
-            increment = -1;
-          } else {
-            return;
-          }
-
-          const form = button.closest(".quantity-form");
-          if (!form) return;
-
-          const sku = button.dataset.sku;
-          const hiddenInput = document.getElementById(`qty-input-${sku}`);
-          const display = document.getElementById(`qty-display-${sku}`);
-
-          const maxQuantity = parseInt(form.dataset.productMax, 10);
-
-          let currentQuantity = parseInt(hiddenInput.value, 10);
-          let newQuantity = currentQuantity + increment;
-
-          // 1. Apply MIN constraint (if 0 remove)
-          if (newQuantity < 0) {
-            newQuantity = 0;
-          }
-
-          // 2. Apply MAX constraint (based on stock on hand)
-          if (newQuantity > maxQuantity) {
-            console.warn("Cannot add more than stock on hand.");
-            return;
-          }
-
-          display.textContent = newQuantity;
-          hiddenInput.value = newQuantity;
-
-          // Automatically update the cart on the server
-          form.submit();
-        });
-      });
-    </script>
   </body>
 </html>
