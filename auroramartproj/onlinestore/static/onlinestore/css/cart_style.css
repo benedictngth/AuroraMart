@@ -17,25 +17,24 @@
   margin-bottom: 30px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  overflow: hidden; /* For rounded corners on the table */
+  overflow: hidden;
 }
 .cart-table th, .cart-table td {
-  border-bottom: 1px solid #e0e0e0; /* Lighter borders */
-  padding: 18px 15px; /* More vertical padding for space */
+  border-bottom: 1px solid #e0e0e0;
+  padding: 18px 15px;
   text-align: left;
   vertical-align: middle;
 }
 .cart-table th {
-  background-color: #e8eaf6; /* Light blue header */
+  background-color: #e8eaf6;
   color: #3f51b5;
   font-weight: 700;
   text-transform: uppercase;
   font-size: 0.95em;
 }
-/* Ensure the quantity cell content is centered */
 .cart-table .quantity-cell {
   text-align: center;
-  width: 150px; /* Increased width for controls */
+  width: 150px;
 }
 .cart-table td.total-row {
   text-align: right;
@@ -45,23 +44,22 @@
   color: #333;
 }
 
-/* FIX: STYLING for Plus/Minus Controls */
 .quantity-controls {
   display: flex;
   align-items: center;
-  gap: 8px; /* Increased gap */
-  justify-content: center; /* Center controls horizontally */
-  flex-wrap: nowrap; /* CRITICAL FIX: Prevent wrapping onto a new line */
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: nowrap;
 }
 .quantity-controls button {
-  width: 35px; /* Slightly larger buttons */
+  width: 35px;
   height: 35px;
   border: none;
-  background-color: #3f51b5; /* Primary color buttons */
+  background-color: #3f51b5;
   color: white;
   cursor: pointer;
   font-weight: bold;
-  border-radius: 6px; /* Slightly more rounded */
+  border-radius: 6px; 
   transition: background-color 0.2s, transform 0.1s;
   flex-shrink: 0; 
   font-size: 1.1em;
@@ -94,7 +92,7 @@
   background-color: #d32f2f;
 }
 .product-image {
-  width: 70px; /* Slightly larger image */
+  width: 70px;
   height: 70px;
   object-fit: cover;
   margin-right: 15px;
@@ -175,7 +173,7 @@
 
 .remove-btn {
   padding: 8px 12px;
-  background-color: #d9534f; /* Red color for destructive action */
+  background-color: #d9534f;
   color: white;
   border: none;
   border-radius: 4px;
@@ -186,4 +184,103 @@
 
 .remove-btn:hover {
   background-color: #c9302c;
+}
+
+.confirmation-page-wrapper {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  min-height: 80vh; 
+}
+
+.order-details-card {
+  background-color: #ffffff; 
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  max-width: 700px; 
+  width: 100%;
+  margin: 20px auto 0 auto; 
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: bold;
+  color: #ffffff;
+  text-transform: uppercase;
+  font-size: 0.85em;
+  margin-left: 10px;
+}
+
+.status-Processing {
+  background-color: #ff9800;
+}
+.status-Shipped {
+  background-color: #3f51b5;
+}
+.status-Delivered {
+  background-color: #4caf50;
+}
+.status-Cancelled {
+  background-color: #f44336;
+}
+
+.continue-shopping-btn {
+    display: block;
+    width: 280px;
+    margin: 30px auto 0 auto;
+    padding: 15px 20px;
+    background-color: #3f51b5;
+    color: white;
+    text-align: center;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-weight: 700;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+}
+.continue-shopping-btn:hover {
+  background-color: #303f9f;
+}
+
+.track-order-button {
+    background-color: #4b6cb7;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    text-align: center;
+    font-weight: 500;
+    display: inline-block;
+    white-space: nowrap;
+    transition: background-color 0.2s;
+}
+.track-order-button:hover {
+    background-color: #3f5a9e;
+}
+
+.status-cell {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.order-number-cell {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.cart-table th:nth-child(2), 
+.cart-table td:nth-child(2) {
+    white-space: nowrap; 
 }

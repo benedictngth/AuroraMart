@@ -86,7 +86,10 @@
         </table>
 
         <div class="cart-summary">
-          <button class="checkout-btn">Proceed to Checkout</button>
+            <form action="{% url 'checkout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="checkout-btn">Proceed to Checkout</button>
+            </form>
         </div>
       </div>
       {% else %}

@@ -31,13 +31,14 @@ class CustomerProfileForm(forms.ModelForm):
         model = CustomerProfile 
         fields = ['age', 'gender', 'employment_status', 'occupation', 'education', 'household_size', 'has_children', 'monthly_income']
 
-        GENDER_CHOICES = [
-        ('Male', "Male"),
-        ("Female", "Female")
-        ]
-
         widgets = {
-            'gender': forms.Select(choices = GENDER_CHOICES)
+            'gender': forms.Select(attrs={'class': 'form-control'}),
+            'employment_status': forms.Select(attrs={'class': 'form-control'}),
+            'occupation': forms.Select(attrs={'class': 'form-control'}),
+            'education': forms.Select(attrs={'class': 'form-control'}),
+            'age': forms.NumberInput(attrs={'class': 'form-control', 'min': 0}),
+            'household_size': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
+            'monthly_income': forms.NumberInput(attrs={'class': 'form-control', 'min': 0}),
         }
 
 class ProductSortForm(forms.Form):

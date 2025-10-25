@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Customer
+from .models import Customer, CustomerProfile
 from .forms import RegistrationForm, LoginForm, CustomerProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -62,3 +62,25 @@ def create_profile_view(request):
     else:
         form = CustomerProfileForm()
         return render(request, "onlinestore/create_profile.html", {'form': form})
+    
+@login_required
+def edit_profile_view(request):
+    
+    try:
+        profile = request.user.customer.customerprofile
+    except (Customer.DoesNotExist, CustomerProfile.DoesNotExist):
+        return redirect('create_profile') 
+
+    if request.method == 'POST':
+        form = CustomerProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('landing_page')
+    else:
+        form = CustomerProfileForm(instance=profile)
+
+    context = {
+        'form': form,
+        'is_edit': True 
+    }
+    return render(request, "onlinestore/edit_profile.html", context)

@@ -1,46 +1,63 @@
 {% load static %}
-<header>
-  <div class="header-left">
-    <div class="logo"><a href="{% url 'landing_page' %}">AuroraMart</a></div>
-    <div class="header-actions">
-      {% if user.is_authenticated %}
-      <span class="welcome-msg">Welcome, {{user.username}} &nbsp </span>
-      <a href="{% url 'logout' %}" class="login-btn">Logout</a>
-      {% else %}
-      <a href="{% url 'login' %}" class="login-btn">Login &nbsp</a>
-      <a href="{% url 'register' %}" class="register-btn">Register</a>
-      {% endif %}
-    </div>
-  </div>
-
-  <nav id="main-nav-menu">
-    {% for item in MENU_DATA %}
-    <div class="category-item">
-      <a href="{% url 'product_list' %}?category={{ item.category.id }}" class="nav-category-link">
-        {{ item.category.category_name }}
-      </a>
-      <div class="nav-bar-panel">
-        <ul class="subcategory-list">
-          {% for subcat in item.subcategories %}
-          <li>
-            <a href="{% url 'product_list' %}?subcategory={{ subcat.id }}">
-              {{ subcat.subcategory_name }}
-            </a>
-          </li>
-          {% endfor %}
-        </ul>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AuroraMart | Page Title</title>
+    
+    <link rel="stylesheet" href="{% static 'onlinestore/css/style.css' %}" />
+  </head>
+  <body>
+    <header>
+      <div class="header-left">
+        <div class="logo"><a href="{% url 'landing_page' %}">AuroraMart</a></div>
+        <div class="header-actions">
+          {% if user.is_authenticated %}
+          <div class="user-actions-group">
+          <span class="welcome-msg">Welcome, {{user.username}}</span>
+          <a href="{% url 'order_tracking' %}" class="profile-btn">Track Order</a>
+          <a href="{% url 'view_all_orders' %}" class="profile-btn">My Orders</a> 
+          <a href="{% url 'edit_profile' %}" class="profile-btn">Edit Profile</a>
+          <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+        </div>
+          {% else %}
+          <a href="{% url 'login' %}" class="login-btn">Login &nbsp</a>
+          <a href="{% url 'register' %}" class="register-btn">Register</a>
+          {% endif %}
+        </div>
       </div>
-    </div>
-    {% endfor %}
 
-    <div class="cart-link-container">
-        <a href="{% url 'cart_detail' %}" class="cart-icon-link">
-            <span style="font-size: 24px;">🛒</span>
-            
-            {% if cart_total_quantity > 0 %}
-                <span class="cart-count">{{ cart_total_quantity }}</span>
-            {% endif %}
-        </a>
-    </div>
-  </nav>
-</header>
+      <nav id="main-nav-menu">
+        {% for item in MENU_DATA %}
+        <div class="category-item">
+          <a href="{% url 'product_list' %}?category={{ item.category.id }}" class="nav-category-link">
+            {{ item.category.category_name }}
+          </a>
+          <div class="nav-bar-panel">
+            <ul class="subcategory-list">
+              {% for subcat in item.subcategories %}
+              <li>
+                <a href="{% url 'product_list' %}?subcategory={{ subcat.id }}">
+                  {{ subcat.subcategory_name }}
+                </a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        {% endfor %}
+
+        <div class="cart-link-container">
+            <a href="{% url 'cart_detail' %}" class="cart-icon-link">
+                <span style="font-size: 24px;">🛒</span>
+                
+                {% if cart_total_quantity > 0 %}
+                    <span class="cart-count">{{ cart_total_quantity }}</span>
+                {% endif %}
+            </a>
+        </div>
+      </nav>
+    </header>
+  </body>
+</html>

@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>AuroraMart | My Orders</title>
+        <link rel="stylesheet" href="{% static 'onlinestore/css/style.css' %}" />
+        <link rel="stylesheet" href="{% static 'onlinestore/css/cart_style.css' %}" />
+    </head>
+
+    <body>
+        {% include 'onlinestore/_navBar.html' %}
+
+        <main class="confirmation-page-wrapper">
+            <h1 class="cart-header">My Order History</h1>
+
+            {% if error_message %}
+                <p style="color: red; text-align: center; font-weight: bold;">{{ error_message }}</p>
+            {% elif all_orders %}
+                <div class="order-details-card" style="padding: 0; max-width: 900px; margin: 20px auto;">
+                    
+                    <table class="cart-table" style="margin-bottom: 0;">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">ORDER NUMBER</th>
+                                <th style="width: 15%; white-space: nowrap;">ORDER DATE</th> 
+                                <th style="width: 15%; text-align: center;">STATUS</th>
+                                <th style="width: 15%; text-align: right;">TOTAL</th>
+                                <th style="width: 30%;">ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in all_orders %}
+                            <tr>
+                                <td class="order-number-cell">{{ order.order_number }}</td>
+                                <td style="white-space: nowrap;">{{ order.order_date_time | date:"M d, Y" }}</td>
+                                
+                                <td class="status-cell">
+                                    <span class="status-pill status-{{ order.order_status }}">
+                                        {{ order.order_status }}
+                                    </span>
+                                </td>
+                                
+                                <td style="text-align: right; font-weight: bold;">${{ order.grand_total | floatformat:2 }}</td>
+                                
+                                <td>
+                                    <a href="{% url 'order_tracking_detail' order_id=order.pk %}" class="track-order-button">
+                                        Track Order
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            {% else %}
+                <div class="order-details-card" style="text-align: center;">
+                    <h2>No Orders Found</h2>
+                    <p>It looks like you haven't placed any orders yet.</p>
+                    <a href="{% url 'product_list' %}" class="continue-shopping-btn">Start Shopping</a>
+                </div>
+            {% endif %}
+        </main>
+    </body>
+
+</html>

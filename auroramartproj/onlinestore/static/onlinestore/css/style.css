@@ -49,7 +49,7 @@ header {
 .logo {
     font-size: 1.8em;
     font-weight: bold;
-    padding: 0 var(--page-padding-x);
+    padding-left: var(--page-padding-x);
     display: flex;
     align-items: center;
     height: var(--logo-bar-height);
@@ -60,17 +60,17 @@ header {
 }
 
 .header-left {
+    width: 100%;
     display: flex;
-    align-items: center;
+    align-items: right;
+    justify-content: space-between; 
+    height: var(--logo-bar-height);
 }
 
 .header-actions {
     display: flex;
-    align-items: center;
-    margin-left: 25px; /* Add space between logo and login button */
+    align-items: right;
 }
-
-
 
 #main-nav-menu {
     display: flex;
@@ -498,4 +498,45 @@ header {
     width: 30px;
     font-weight: 500;
     font-size: 1em;
+}
+
+.user-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.user-actions-group .welcome-msg {
+    color: #444; 
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.user-actions-group .profile-btn {
+    padding: 5px 10px;
+    background-color: #007bff; 
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+}
+
+.user-actions-group .profile-btn:hover {
+    background-color: #0056b3;
+}
+
+.user-actions-group .logout-btn {
+    color: #dc3545; 
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 1px solid #dc3545;
+    border-radius: 4px;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+}
+
+.user-actions-group .logout-btn:hover {
+    background-color: #dc3545;
+    color: white;
 }
