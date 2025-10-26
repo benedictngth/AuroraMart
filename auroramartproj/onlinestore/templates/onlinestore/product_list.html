@@ -43,6 +43,10 @@
                 <input type="hidden" name="sort" value="{{ request.GET.sort }}">
             {% endif %}
 
+            {% if request.GET.q %}
+                <input type="hidden" name="q" value="{{ request.GET.q }}">
+            {% endif %}
+
             <div class="filter-group">
                 <label for="{{ filter_form.min_rating.id_for_label }}">Minimum Rating</label>
                 {{ filter_form.min_rating }}
@@ -80,6 +84,10 @@
             {% endif %}
             {% if request.GET.price_range %}
                 <input type="hidden" name="price_range" value="{{ request.GET.price_range }}">
+            {% endif %}
+
+            {% if request.GET.q %}
+                <input type="hidden" name="q" value="{{ request.GET.q }}">
             {% endif %}
 
             <button type="submit" class="sort-submit-btn">Sort</button>

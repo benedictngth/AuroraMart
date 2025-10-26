@@ -1,11 +1,14 @@
 from django.shortcuts import render, get_object_or_404
-import joblib
+from django.urls import reverse
 from .models import Product, Category, Subcategory
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
+from .utils import get_recommendations
 from .forms import ProductSortForm, ProductFilterForm
+from .models import CustomerProfile
 
-def landing_page(request):
+
+def landing_page(request): 
+
     return render(request, 'onlinestore/home.html')
 
 @login_required
@@ -22,6 +25,12 @@ def product_list(request):
     
     category_id = request.GET.get('category')
     subcategory_id = request.GET.get('subcategory')
+    search_query = request.GET.get('q') # Get the search query
+
+    if search_query:
+        #case insensitive search __icontains
+        products = products.filter(product_name__icontains=search_query)
+        title = f"Search results for '{search_query}'"
 
     if subcategory_id:
         current_filter_params = f"subcategory={subcategory_id}"
@@ -135,8 +144,6 @@ def product_detail(request, product_pk):
     redirect_to_cart_flag = request.GET.get('next_page') == 'cart_detail'
     recommendations = get_recommendations([product_pk], metric = "lift", top_n = 5) 
 
-    print(recommendations)
-
     context = {
         'product': product,
         'cart_quantity': cart_quantity,
@@ -149,29 +156,4 @@ def product_detail(request, product_pk):
 
 
 
-# use the loaded_rules to extract recommendations
-#CleanRide Car Care Shield
-def get_recommendations(items, metric='confidence', top_n=3):
-    loaded_rules = joblib.load('onlinestore/b2c_products_500_transactions_50k.joblib')
-    recommendations = set()
-    for item in items:
-        # Find rules where the item is in the antecedents
-        matched_rules = loaded_rules[loaded_rules['antecedents'].apply(lambda x: item in x)]
-        # Sort by the specified metric and get the top N
-        top_rules = matched_rules.sort_values(by=metric, ascending=False).head(top_n)
-        for _, row in top_rules.iterrows():
-            recommendations.update(row['consequents'])
-    # Remove items that are already in the input list
-    recommendations.difference_update(items)
-    product_recs = []
-    for rec in list(recommendations)[:top_n]:
-        try:
-            prod = Product.objects.get(pk=rec)
-            product_recs.append(
-                {'product_sku': prod.sku_code, 
-                 'product_name': prod.product_name,
-                 'product_subcategory': prod.subcategory_id})
-        except Product.DoesNotExist:
-            pass
-    return product_recs
 

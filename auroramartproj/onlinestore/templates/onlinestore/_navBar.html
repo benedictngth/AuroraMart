@@ -5,22 +5,30 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AuroraMart | Page Title</title>
-    
+
     <link rel="stylesheet" href="{% static 'onlinestore/css/style.css' %}" />
   </head>
   <body>
     <header>
       <div class="header-left">
-        <div class="logo"><a href="{% url 'landing_page' %}">AuroraMart</a></div>
+        <div class="logo">
+          <a href="{% url 'landing_page' %}">AuroraMart</a>
+        </div>
         <div class="header-actions">
           {% if user.is_authenticated %}
           <div class="user-actions-group">
-          <span class="welcome-msg">Welcome, {{user.username}}</span>
-          <a href="{% url 'order_tracking' %}" class="profile-btn">Track Order</a>
-          <a href="{% url 'view_all_orders' %}" class="profile-btn">My Orders</a> 
-          <a href="{% url 'edit_profile' %}" class="profile-btn">Edit Profile</a>
-          <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
-        </div>
+            <span class="welcome-msg">Welcome, {{user.username}}</span>
+            <a href="{% url 'order_tracking' %}" class="profile-btn"
+              >Track Order</a
+            >
+            <a href="{% url 'view_all_orders' %}" class="profile-btn"
+              >My Orders</a
+            >
+            <a href="{% url 'edit_profile' %}" class="profile-btn"
+              >Edit Profile</a
+            >
+            <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+          </div>
           {% else %}
           <a href="{% url 'login' %}" class="login-btn">Login &nbsp</a>
           <a href="{% url 'register' %}" class="register-btn">Register</a>
@@ -28,10 +36,30 @@
         </div>
       </div>
 
+      <div class="search-container">
+        <form
+          action="{% url 'product_list' %}"
+          method="get"
+          class="search-form"
+        >
+          <input
+            type="text"
+            name="q"
+            class="search-input"
+            placeholder="Search for products..."
+            value="{{ request.GET.q }}"
+          />
+          <button type="submit" class="search-btn">Search</button>
+        </form>
+      </div>
+
       <nav id="main-nav-menu">
         {% for item in MENU_DATA %}
         <div class="category-item">
-          <a href="{% url 'product_list' %}?category={{ item.category.id }}" class="nav-category-link">
+          <a
+            href="{% url 'product_list' %}?category={{ item.category.id }}"
+            class="nav-category-link {% if item.category.category_name == recommended_category %}recommended{% endif %}"
+          >
             {{ item.category.category_name }}
           </a>
           <div class="nav-bar-panel">
@@ -49,13 +77,13 @@
         {% endfor %}
 
         <div class="cart-link-container">
-            <a href="{% url 'cart_detail' %}" class="cart-icon-link">
-                <span style="font-size: 24px;">🛒</span>
-                
-                {% if cart_total_quantity > 0 %}
-                    <span class="cart-count">{{ cart_total_quantity }}</span>
-                {% endif %}
-            </a>
+          <a href="{% url 'cart_detail' %}" class="cart-icon-link">
+            <span style="font-size: 24px">🛒</span>
+
+            {% if cart_total_quantity > 0 %}
+            <span class="cart-count">{{ cart_total_quantity }}</span>
+            {% endif %}
+          </a>
         </div>
       </nav>
     </header>

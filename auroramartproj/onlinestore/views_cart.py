@@ -145,9 +145,7 @@ def checkout(request):
         return redirect('cart_detail')
     
     custom_order_number = generate_order_number()
-        
     try:
-        with transaction.atomic():
             new_order = Order.objects.create(
                 order_number=custom_order_number,
                 customer=customer,
