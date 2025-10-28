@@ -16,7 +16,7 @@ def product_list(request):
     filter_form = ProductFilterForm(request.GET)
     sort_form = ProductSortForm(request.GET)
 
-    products = Product.objects.all()
+    products = Product.objects.filter(is_active=True)
     title = "All Products"
     current_filter_params = ''
     current_sort = 'name_asc'
@@ -134,7 +134,7 @@ def product_list(request):
 
 @login_required
 def product_detail(request, product_pk):
-    product = get_object_or_404(Product, pk = product_pk)
+    product = get_object_or_404(Product, pk=product_pk, is_active=True)
     cart = request.session.get('cart', {})
     product_sku_str = str(product.sku_code)
     cart_quantity = cart.get(product_sku_str, {}).get('quantity', 0)

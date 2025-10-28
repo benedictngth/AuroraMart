@@ -136,6 +136,7 @@ def checkout(request):
             order_items_data.append({
                 'product': product,
                 'quantity': quantity,
+                'purchased_price': unit_price,
                 'line_subtotal': item_subtotal
             })
 
@@ -158,6 +159,7 @@ def checkout(request):
                     order=new_order,
                     product=item_data['product'],
                     quantity=item_data['quantity'],
+                    purchased_price=item_data['purchased_price'],
                     line_subtotal=item_data['line_subtotal']
                 )
 

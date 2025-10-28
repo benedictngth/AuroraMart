@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background-color: #f4f7f9; 
+            margin: 0; 
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px; 
+            margin: auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .detail-section {
+            padding: 20px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .detail-section:last-child {
+            border-bottom: none;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .order-summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .order-summary-table th, .order-summary-table td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .order-summary-table th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        .order-summary-table tfoot td {
+            border-top: 2px solid #333;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: white;
+            text-transform: capitalize;
+            margin-left: 10px;
+        }
+
+        .status-Processing { background-color: #ffc107; color: #333; }
+        .status-Shipped { background-color: #007bff; }
+        .status-Delivered { background-color: #28a745; }
+        .status-Cancelled { background-color: #dc3545; }
+
+        .status-form-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .status-form-group select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .status-form-group button {
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'adminpanel_order_list' %}">← Back to Order List</a>
+        <h1>Order #{{ order.order_number }}</h1>
+        <hr>
+
+        <div class="info-grid detail-section">
+            <div>
+                <h2>Customer Details</h2>
+                <p><strong>Name:</strong> {{ order.customer.customer_name }}</p>
+                <p><strong>Customer ID:</strong> {{ order.customer.pk }}</p>
+                <p><strong>Order Date:</strong> {{ order.order_date_time|date:"F d, Y P" }}</p>
+            </div>
+            <div>
+                <h2>Shipping Address</h2>
+                <address>
+                    {{ order.customer.customer_address|linebreaksbr }}
+                </address>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <h2>Current Status:
+                <span class="status-pill status-{{ order.order_status }}">{{ order.order_status }}</span>
+            </h2>
+            
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="status-form-group">
+                    {{ status_form.order_status.label_tag }}
+                    {{ status_form.order_status }}
+                    <button type="submit">Update Status</button>
+                </div>
+                {% if status_form.errors %}<p style="color: red;">Error updating status.</p>{% endif %}
+            </form>
+        </div>
+
+        <div class="detail-section">
+            <h2>Items Ordered ({{ order_items|length }})</h2>
+            <table class="order-summary-table">
+                <thead>
+                    <tr>
+                        <th style="width: 35%;">Product Name</th>
+                        <th style="width: 20%;">SKU</th>
+                        <th style="width: 10%; text-align: center;">Qty</th>
+                        <th style="width: 20%;">Unit Price (Sold)</th>
+                        <th style="width: 15%; text-align: right;">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order_items %}
+                    <tr>
+                        <td>{{ item.product.product_name }}</td>
+                        <td>{{ item.product.sku_code }}</td>
+                        <td style="text-align: center;">{{ item.quantity }}</td>
+                        <td>${{ item.purchased_price|floatformat:2 }}</td>
+                        <td style="text-align: right;">${{ item.line_subtotal|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" style="text-align: right; border: none;"></td>
+                        <td style="text-align: right; border: none;"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="text-align: right;">GRAND TOTAL:</td>
+                        <td style="text-align: right;">${{ order.grand_total|floatformat:2 }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+    </div>
+</body>
+</html>

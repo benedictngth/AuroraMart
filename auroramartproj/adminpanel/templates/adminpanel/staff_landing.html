@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+    <style>
+        h1 {
+            text-align: center;
+        }body {
+            font-family: sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .dashboard-cell {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 150px;
+        }
+        .dashboard-cell:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+        .cell-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+        .cell-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Staff Management Portal</h1>
+    
+    <div class="dashboard-grid">
+        
+        <a href="{% url 'adminpanel_product_list' %}" class="dashboard-cell">
+            <span class="cell-icon">📦</span>
+            <div class="cell-title">Manage Products</div>
+            <p>View, modify, and deactivate items.</p>
+        </a>
+
+        <a href="{% url 'adminpanel_order_list' %}" class="dashboard-cell">
+            <span class="cell-icon">📝</span>
+            <div class="cell-title">Manage Orders</div>
+            <p>Track, process, and update customer orders.</p>
+        </a>
+
+    </div>
+</body>
+</html>
