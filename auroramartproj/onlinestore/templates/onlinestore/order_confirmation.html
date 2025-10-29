@@ -1,68 +1,81 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AuroraMart | Order Confirmation</title>
+    <link rel="stylesheet" href="{% static 'onlinestore/css/style.css' %}" />
+    <link
+      rel="stylesheet"
+      href="{% static 'onlinestore/css/cart_style.css' %}"
+    />
+  </head>
+  <body>
+    {% include 'onlinestore/_navBar.html' %}
 
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>AuroraMart | Order Confirmation</title>
-        <link rel="stylesheet" href="{% static 'onlinestore/css/style.css' %}" />
-        <link rel="stylesheet" href="{% static 'onlinestore/css/cart_style.css' %}" />
-    </head>
-    <body>
-        {% include 'onlinestore/_navBar.html' %}
+    <main class="confirmation-page-wrapper">
+      <h1 class="cart-header">Order Confirmed! 🎉</h1>
 
-        <main class="confirmation-page-wrapper">
-            <h1 class="cart-header">Order Confirmed! 🎉</h1>
+      <div class="order-details-card">
+        <h2>Thank you for your order!</h2>
+        <p>Your order has been successfully placed.</p>
 
-            <div class="order-details-card">
-                <h2>Thank you for your order!</h2>
-                <p>Your order has been successfully placed.</p>
+        <p>
+          <strong>Order Number:</strong> {{ order.order_number }}
+          <span class="status-pill status-{{ order.order_status }}">
+            {{ order.order_status }}
+          </span>
+        </p>
+        <p>
+          <strong>Order Date:</strong> {{ order.order_date_time | date:"F d, Y
+          P" }}
+        </p>
+        <p>
+          <strong>Shipping To:</strong> {{ order.customer.customer_address |
+          linebreaksbr }}
+        </p>
 
-                <p>
-                    <strong>Order Number:</strong> {{ order.order_number }}
-                    <span class="status-pill status-{{ order.order_status }}">
-                        {{ order.order_status }}
-                    </span>
-                </p>
-                <p><strong>Order Date:</strong> {{ order.order_date_time | date:"F d, Y P" }}</p>
-                <p><strong>Shipping To:</strong> {{ order.customer.customer_address | linebreaksbr }}</p>
+        <hr style="margin: 20px 0" />
 
-                <hr style="margin: 20px 0;">
+        <h3>Order Summary</h3>
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th style="text-align: center">Quantity</th>
+              <th>Unit Price</th>
+              <th style="text-align: right">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in order_items %}
+            <tr>
+              <td>{{ item.product.product_name }}</td>
+              <td style="text-align: center">{{ item.quantity }}</td>
+              <td>${{ item.product.unit_price | floatformat:2 }}</td>
+              <td style="text-align: right">
+                ${{ item.line_subtotal | floatformat:2 }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" class="total-row">Grand Total:</td>
+              <td class="total-row" style="text-align: right">
+                <strong>${{ order.grand_total | floatformat:2 }}</strong>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
 
-                <h3>Order Summary</h3>
-                <table class="cart-table">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th style="text-align: center;">Quantity</th>
-                            <th>Unit Price</th>
-                            <th style="text-align: right">Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in order_items %}
-                        <tr>
-                            <td>{{ item.product.product_name }}</td>
-                            <td style="text-align: center;">{{ item.quantity }}</td>
-                            <td>${{ item.product.unit_price | floatformat:2 }}</td>
-                            <td style="text-align: right">${{ item.line_subtotal | floatformat:2 }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="3" class="total-row">Grand Total:</td>
-                            <td class="total-row" style="text-align: right">
-                                <strong>${{ order.grand_total | floatformat:2 }}</strong>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-
-                <a href="{% url 'product_list' %}" class="continue-shopping-btn">Continue Shopping</a>
-            </div>
-        </main>
-    </body>
-
+        <a
+          href="{% url 'onlinestore:product_list' %}"
+          class="continue-shopping-btn"
+          >Continue Shopping</a
+        >
+      </div>
+    </main>
+  </body>
 </html>

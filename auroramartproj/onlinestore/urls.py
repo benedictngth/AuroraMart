@@ -5,6 +5,7 @@ from .import views_auth
 from . import views_order
 
 # This list will hold your custom URL patterns for the onlinestore app
+app_name = "onlinestore"
 
 urlpatterns = [
 
@@ -14,26 +15,26 @@ urlpatterns = [
     path("onlinestore/product/<str:product_pk>/", views.product_detail, name = "product_detail"), 
     
     #cart urls
-    path("onlinestore/cart/", views_cart.cart_detail, name = "cart_detail"),
-    path("onlinestore/cart/add/<str:product_pk>/", views_cart.add_to_cart, name = "add_to_cart"),
-    path("onlinestore/cart/remove/<str:product_pk>/", views_cart.remove_from_cart, name="remove_from_cart"), 
-    path('onlinestore/cart/checkout/', views_cart.checkout, name='checkout'),
+    path("cart/", views_cart.cart_detail, name = "cart_detail"),
+    path("cart/add/<str:product_pk>/", views_cart.add_to_cart, name = "add_to_cart"),
+    path("cart/remove/<str:product_pk>/", views_cart.remove_from_cart, name="remove_from_cart"), 
+    path('cart/checkout/', views_cart.checkout, name='checkout'),
 
     #order urls
     path('checkout/confirm/<str:order_id>/', views_order.order_confirmation, name='order_confirmation'),
-    path('onlinestore/track-order/', views_order.order_tracking, name='order_tracking'), 
-    path('onlinestore/track-order/<str:order_id>/', views_order.order_tracking, name='order_tracking_detail'),
-    path('onlinestore/my-orders/', views_order.view_all_orders, name='view_all_orders'),
+    path('track-order/', views_order.order_tracking, name='order_tracking'), 
+    path('track-order/<str:order_id>/', views_order.order_tracking, name='order_tracking_detail'),
+    path('my-orders/', views_order.view_all_orders, name='view_all_orders'),
     
 
     #auth urls
-    path("onlinestore/login/", views_auth.login_view, name = "login"),
-    path("onlinestore/logout/", views_auth.logout_view, name = "logout"),
-    path("onlinestore/register/", views_auth.register_view, name = "register"),
-    path("onlinestore/register/create-profile/", views_auth.create_profile_view, name = "create_profile"),
+    path("login/", views_auth.login_view, name = "login"),
+    path("logout/", views_auth.logout_view, name = "logout"),
+    path("register/", views_auth.register_view, name = "register"),
+    path("register/create-profile/", views_auth.create_profile_view, name = "create_profile"),
 
     #profile urls
-    path("onlinestore/profile/edit/", views_auth.edit_profile_view, name = "edit_profile"),
+    path("profile/edit/", views_auth.edit_profile_view, name = "edit_profile"),
 
 
 

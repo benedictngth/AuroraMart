@@ -57,7 +57,7 @@
                 {{ filter_form.price_range }}
             </div>
 
-            <a href="{% url 'product_list' %}?{% if category_id %}category={{ category_id }}{% endif %}{% if subcategory_id %}&subcategory={{ subcategory_id }}{% endif %}" class="view-details-btn" style="width: 100%; margin-top: 10px; background-color: #f0ad4e; text-align: center;">Clear Filters</a>
+            <a href="{% url 'onlinestore:product_list' %}?{% if category_id %}category={{ category_id }}{% endif %}{% if subcategory_id %}&subcategory={{ subcategory_id }}{% endif %}" class="view-details-btn" style="width: 100%; margin-top: 10px; background-color: #f0ad4e; text-align: center;">Clear Filters</a>
 
           </form>
       </div>
@@ -99,7 +99,7 @@
           <div class="product-card">
             <h2 class="product-name">
               {% if product.pk %}
-              <a href="{% url 'product_detail' product.pk %}?{% if category_id %}category={{ category_id }}{% endif %}{% if subcategory_id %}&subcategory={{ subcategory_id }}{% endif %}">
+              <a href="{% url 'onlinestore:product_detail' product.pk %}?{% if category_id %}category={{ category_id }}{% endif %}{% if subcategory_id %}&subcategory={{ subcategory_id }}{% endif %}">
                 {{ product.product_name }}
               </a>
               {% else %} {{ product.product_name }} (Invalid Product) {% endif %}
@@ -120,17 +120,17 @@
             <p class="product-stock stock-available">Available</p>
             {% endif %}
             <div class="product-actions" id="product-actions-{{ product.sku_code }}">
-              <a href="{% url 'product_detail' product_pk=product.pk %}?{% if category_id %}category={{ category_id }}{% endif %}{% if subcategory_id %}&subcategory={{ subcategory_id }}{% endif %}" class="view-details-link">
+              <a href="{% url 'onlinestore:product_detail' product_pk=product.pk %}?{% if category_id %}category={{ category_id }}{% endif %}{% if subcategory_id %}&subcategory={{ subcategory_id }}{% endif %}" class="view-details-link">
                 <button class="view-details-btn" type="button">View Details</button>
               </a>
 
               {% if product.cart_quantity > 0 %}
                   <div class="in-cart-info">
                       <p>In Cart: {{ product.cart_quantity }}</p>
-                      <a href="{% url 'cart_detail' %}" class="edit-in-cart-link">Edit in Cart</a>
+                      <a href="{% url 'onlinestore:cart_detail' %}" class="edit-in-cart-link">Edit in Cart</a>
                   </div>
               {% else %}
-                  <form action="{% url 'add_to_cart' product_pk=product.pk %}" method="post" class="add-to-cart-form-initial">
+                  <form action="{% url 'onlinestore:add_to_cart' product_pk=product.pk %}" method="post" class="add-to-cart-form-initial">
                       {% csrf_token %}
                       {% if request.GET.category %}
                           <input type="hidden" name="category" value="{{ request.GET.category }}">

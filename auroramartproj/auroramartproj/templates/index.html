@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}AuroraMart{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    {% block head_extra %}{% endblock %}
+  </head>
+  <body>
+    <a href="{% url 'onlinestore:landing_page' %}">Go to Online Store</a>
+    <a href="{% url 'adminpanel:staff_login' %}">Admin Panel Login</a>
+    {% block content %}{% endblock %}
+  </body>
+</html>

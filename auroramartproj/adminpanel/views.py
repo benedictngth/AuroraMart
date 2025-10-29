@@ -1,45 +1,64 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from onlinestore.models import Product, Order, OrderItem
+from .forms import ProductForm, StaffLoginForm, StaffRegistrationForm, StaffProductFilterForm, StaffProductSortForm, OrderStatusForm
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.models import User
 from django.db.models import Q
-from onlinestore.models import Product, Category, Subcategory, Order
-from .forms import ProductForm, OrderStatusForm, StaffProductSortForm, StaffProductFilterForm
-from onlinestore.models import Product
 
-def staff_landing_page(request):
+def staff_check(user):
+    """Checks if the user is authenticated and a staff member."""
+    return user.is_authenticated and user.is_staff
+
+def superuser_check(user):
+    """Checks if the user is a superuser."""
+    return user.is_superuser
+
+def staff_login_view(request):
+    if request.user.is_authenticated and request.user.is_staff:
+        return redirect('adminpanel:staff_landing')
+
+    if request.method == 'POST':
+        form = StaffLoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None and user.is_staff:
+                login(request, user)
+                return redirect('adminpanel:staff_landing')
+            else:
+                form.add_error(None, "Invalid credentials or not a staff account.")
+    else:
+        form = StaffLoginForm()
+    return render(request, 'adminpanel/staff_login.html', {'form': form})
+
+def staff_logout_view(request):
+    logout(request)
+    return redirect('adminpanel:staff_login')
+
+def staff_register_view(request):
+    if request.method == 'POST':
+        form = StaffRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.is_staff = True  # Set the staff flag
+            user.save()
+            return redirect('adminpanel:staff_landing')
+    else:
+        form = StaffRegistrationForm()
+    
+    return render(request, 'adminpanel/staff_register.html', {'form': form})
+
+@user_passes_test(staff_check, login_url='/adminpanel/login/')
+def staff_landing(request):
     context = {
         'page_title': "Staff Dashboard",
     }
     return render(request, 'adminpanel/staff_landing.html', context)
 
-def order_list(request):
-    orders = Order.objects.all().order_by('-order_date_time')
-    
-    context = {
-        'orders': orders,
-        'page_title': 'Manage Customer Orders',
-    }
-    return render(request, "adminpanel/order_list.html", context)
-
-def order_detail(request, order_pk):
-    order = get_object_or_404(Order, pk=order_pk)
-    
-    order_items = order.orderitem_set.select_related('product')
-    
-    if request.method == 'POST':
-        form = OrderStatusForm(request.POST, instance=order)
-        if form.is_valid():
-            form.save()
-            return redirect('adminpanel_order_detail', order_pk=order.pk)
-    else:
-        form = OrderStatusForm(instance=order)
-
-    context = {
-        'order': order,
-        'order_items': order_items,
-        'status_form': form,
-        'page_title': f'Order Details: {order.order_number}',
-    }
-    return render(request, "adminpanel/order_detail.html", context)
-
+@user_passes_test(staff_check, login_url='/adminpanel/login/')
 def product_list(request):
     filter_form = StaffProductFilterForm(request.GET) 
     sort_form = StaffProductSortForm(request.GET)
@@ -94,6 +113,7 @@ def product_list(request):
 
     return render(request, "adminpanel/product_list.html", context) 
 
+@user_passes_test(staff_check, login_url='/adminpanel/login/')
 def new_product(request):
     if request.method == "POST": 
         form = ProductForm(request.POST)
@@ -120,19 +140,13 @@ def new_product(request):
                 reorder_quantity=reorder_quantity
             )
             product.save() 
-        return redirect("adminpanel_product_list")
+        return redirect("adminpanel:adminpanel_product_list")
         
     else:
         form = ProductForm()
-        return render(request, "adminpanel/create_product.html", {'form': form})
-    
+        return render(request, 'adminpanel/create_product.html', {'form': form})
 
-def delete_product(request, product_pk):
-    product = Product.objects.get(pk = product_pk)
-    product.is_active = False
-    product.save()
-    return redirect("adminpanel_product_list")
-
+@user_passes_test(staff_check, login_url='/adminpanel/login/')
 def modify_product(request, product_pk):
     product = Product.objects.get(pk = product_pk)
     if request.method == "POST":
@@ -148,8 +162,41 @@ def modify_product(request, product_pk):
             product.quantity_on_hand = form.cleaned_data['quantity_on_hand']
             product.reorder_quantity = form.cleaned_data['reorder_quantity']
             product.save()
-        return redirect("adminpanel_product_list")
+        return redirect("adminpanel:adminpanel_product_list")
     else: 
         
         form = ProductForm(instance=product)
-        return render(request, "adminpanel/modify_product.html", {'form':form})
+        return render(request, 'adminpanel/modify_product.html', {'form': form})
+    
+@user_passes_test(staff_check, login_url='/adminpanel/login/')
+def order_list(request):
+    orders = Order.objects.all().order_by('-order_date_time')
+    
+    context = {
+        'orders': orders,
+        'page_title': 'Manage Customer Orders',
+    }
+    return render(request, "adminpanel/order_list.html", context)
+
+
+@user_passes_test(staff_check, login_url='/adminpanel/login/')
+def order_detail(request, order_pk):
+    order = get_object_or_404(Order, pk=order_pk)
+    
+    order_items = order.orderitem_set.select_related('product')
+    
+    if request.method == 'POST':
+        form = OrderStatusForm(request.POST, instance=order)
+        if form.is_valid():
+            form.save()
+            return redirect('adminpanel:adminpanel_order_detail', order_pk=order.pk)
+    else:
+        form = OrderStatusForm(instance=order)
+        
+    context = {
+        'order': order,
+        'order_items': order_items,
+        'status_form': form,
+        'page_title': f'Order Details: {order.order_number}',
+    }
+    return render(request, "adminpanel/order_detail.html", context)

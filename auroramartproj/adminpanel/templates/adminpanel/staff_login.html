@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Staff Login</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f7f6;
+      }
+      .login-container {
+        background: white;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 25px;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      .submit-btn {
+        width: 100%;
+        padding: 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .error-message {
+        color: red;
+        text-align: center;
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <h2>Staff Portal Login</h2>
+      <form method="post">
+        {% csrf_token %} {% if form.non_field_errors %}
+        <div class="error-message">
+          {% for error in form.non_field_errors %} {{ error }} {% endfor %}
+        </div>
+        {% endif %}
+        <div class="form-group">
+          <label for="id_username">Username</label>
+          {{ form.username }}
+        </div>
+        <div class="form-group">
+          <label for="id_password">Password</label>
+          {{ form.password }}
+        </div>
+        <button type="submit" class="submit-btn">Login</button>
+      </form>
+      <div style="text-align: center; margin-top: 20px">
+        <a href="{% url 'adminpanel:staff_register' %}">Register</a>
+      </div>
+    </div>
+  </body>
+</html>

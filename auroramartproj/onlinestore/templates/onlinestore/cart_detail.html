@@ -34,7 +34,7 @@
               <td>
                 <h3 class="product-name">
                   <a
-                    href="{% url 'product_detail' item.product.pk %}?next_page=cart_detail"
+                    href="{% url 'onlinestore:product_detail' item.product.pk %}?next_page=cart_detail"
                   >
                     {{ item.product.product_name }}</a
                   >
@@ -44,7 +44,7 @@
               <td>${{ item.product.unit_price }}</td>
               <td>
                 <form
-                  action="{% url 'add_to_cart' product_pk=item.product.sku_code %}"
+                  action="{% url 'onlinestore:add_to_cart' product_pk=item.product.sku_code %}"
                   method="post"
                   class="quantity-form"
                 >
@@ -65,7 +65,7 @@
               </td>
               <td>
                 <form
-                  action="{% url 'remove_from_cart' product_pk=item.product.sku_code %}"
+                  action="{% url 'onlinestore:remove_from_cart' product_pk=item.product.sku_code %}"
                   method="post"
                 >
                   {% csrf_token %}
@@ -86,15 +86,19 @@
         </table>
 
         <div class="cart-summary">
-            <form action="{% url 'checkout' %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="checkout-btn">Proceed to Checkout</button>
-            </form>
+          <form action="{% url 'onlinestore:checkout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="checkout-btn">
+              Proceed to Checkout
+            </button>
+          </form>
         </div>
       </div>
       {% else %}
       <p class="no-results">Your cart is empty.</p>
-      <a href="{% url 'product_list' %}" class="continue-shopping-btn"
+      <a
+        href="{% url 'onlinestore:product_list' %}"
+        class="continue-shopping-btn"
         >Continue Shopping</a
       >
       {% endif %}

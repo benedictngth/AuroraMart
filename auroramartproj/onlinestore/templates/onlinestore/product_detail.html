@@ -37,7 +37,7 @@
           </p>
         </div>
 
-       <form action="{% url 'add_to_cart' product_pk=product.pk %}" method="post" class="add-to-cart-form" data-product-max="{{ product.quantity_on_hand }}">
+       <form action="{% url 'onlinestore:add_to_cart' product_pk=product.pk %}" method="post" class="add-to-cart-form" data-product-max="{{ product.quantity_on_hand }}">
             {% csrf_token %}
             
             <input type="hidden" name="update" value="True">
@@ -76,7 +76,7 @@
           <ul class="recommendations-grid">
             {% for recommendation in recommendations %}
             <li class="recommendation-item">
-              <a href="{% url 'product_detail' product_pk=recommendation.product_sku %}?subcategory={{recommendation.product_subcategory}}">
+              <a href="{% url 'onlinestore:product_detail' product_pk=recommendation.product_sku %}?subcategory={{recommendation.product_subcategory}}">
           {{ recommendation.product_name }}
               </a>
             </li>

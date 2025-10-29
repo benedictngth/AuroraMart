@@ -2,6 +2,7 @@ from django import forms
 from onlinestore.models import Product, Category, Subcategory, Order
 from django.core.exceptions import ValidationError
 from django.core import validators
+from django.contrib.auth.models import User
 
 
 class ProductForm(forms.ModelForm):
@@ -73,3 +74,23 @@ class StaffProductFilterForm(forms.Form):
             self.add_error('min_stock', 'Minimum stock cannot be greater than maximum stock.')
             
         return cleaned_data
+
+
+class StaffLoginForm(forms.Form):
+    username = forms.CharField(max_length=150)
+    password = forms.CharField(widget=forms.PasswordInput)
+
+class StaffRegistrationForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput, help_text="Enter a strong password.")
+    password_confirm = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
+
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+
+    def clean_password_confirm(self):
+        password = self.cleaned_data.get("password")
+        password_confirm = self.cleaned_data.get("password_confirm")
+        if password and password_confirm and password != password_confirm:
+            raise forms.ValidationError("Passwords do not match.")
+        return password_confirm

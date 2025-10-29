@@ -51,7 +51,7 @@ def add_to_cart(request, product_pk):
     if subcategory_id:
         query_params['subcategory'] = subcategory_id
 
-    url = reverse('product_list')
+    url = reverse('onlinestore:product_list')
     if query_params:
         url += '?' + urlencode(query_params)
         
@@ -101,7 +101,7 @@ def remove_from_cart(request, product_pk):
         request.session['cart'] = cart
         request.session.modified = True
 
-    return redirect('cart_detail')
+    return redirect('onlinestore:cart_detail')
 
 @require_POST
 def checkout(request):
@@ -110,12 +110,12 @@ def checkout(request):
     
     cart = request.session.get('cart', {})
     if not cart: # if empty cart
-        return redirect('cart_detail')
+        return redirect('onlinestore:cart_detail')
 
     try:
         customer = Customer.objects.get(user=request.user)
     except Customer.DoesNotExist:
-        return redirect('login') 
+        return redirect('onlinestore:login') 
 
     grand_total = Decimal(0)
     order_items_data = []
@@ -143,7 +143,7 @@ def checkout(request):
     if not order_items_data:
         request.session['cart'] = {}
         request.session.modified = True
-        return redirect('cart_detail')
+        return redirect('onlinestore:cart_detail')
     
     custom_order_number = generate_order_number()
     try:
@@ -168,6 +168,6 @@ def checkout(request):
             
     except Exception as e:
         print(f"Error during checkout: {e}")
-        return redirect('cart_detail')
+        return redirect('onlinestore:cart_detail')
 
-    return redirect('order_confirmation', order_id=new_order.pk)
+    return redirect('onlinestore:order_confirmation', order_id=new_order.pk)

@@ -1,110 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ page_title }}</title>
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            background-color: #f4f7f9; 
-            margin: 0; 
-            padding: 20px;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f7f9;
+        margin: 0;
+        padding: 20px;
+      }
 
-        .container {
-            max-width: 1000px; 
-            margin: 40px auto; 
-            padding: 30px;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
+      .container {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      }
 
-        /* Table Styling */
-        .order-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        .order-table th, .order-table td {
-            padding: 12px 10px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-        .order-table th {
-            background-color: #f0f0f0;
-            font-weight: bold;
-        }
-        .order-table tbody tr:hover {
-            background-color: #fafafa;
-        }
+      /* Table Styling */
+      .order-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      .order-table th,
+      .order-table td {
+        padding: 12px 10px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+      }
+      .order-table th {
+        background-color: #f0f0f0;
+        font-weight: bold;
+      }
+      .order-table tbody tr:hover {
+        background-color: #fafafa;
+      }
 
-        .status-pill {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-size: 0.85em;
-            font-weight: bold;
-            color: white;
-            text-transform: capitalize;
-        }
-        .status-Processing { background-color: #ffc107; color: #333; } 
-        .status-Shipped { background-color: #007bff; } 
-        .status-Delivered { background-color: #28a745; } 
-        .status-Cancelled { background-color: #dc3545; } 
+      .status-pill {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 0.85em;
+        font-weight: bold;
+        color: white;
+        text-transform: capitalize;
+      }
+      .status-Processing {
+        background-color: #ffc107;
+        color: #333;
+      }
+      .status-Shipped {
+        background-color: #007bff;
+      }
+      .status-Delivered {
+        background-color: #28a745;
+      }
+      .status-Cancelled {
+        background-color: #dc3545;
+      }
 
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            text-decoration: none;
-            color: #007bff;
-        }
+      .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        text-decoration: none;
+        color: #007bff;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <a href="{% url 'staff_landing' %}" class="back-link">← Back to Dashboard</a>
-        <h1>{{ page_title }}</h1>
-        <hr>
+      <a href="{% url 'adminpanel:staff_landing' %}" class="back-link"
+        >Back to Dashboard</a
+      >
+      <h1>{{ page_title }}</h1>
+      <hr />
 
-        {% if orders %}
-        <table class="order-table">
-            <thead>
-                <tr>
-                    <th style="width: 15%;">Order No.</th>
-                    <th style="width: 25%;">Customer</th>
-                    <th style="width: 20%;">Date Placed</th>
-                    <th style="width: 15%;">Total</th>
-                    <th style="width: 15%;">Status</th>
-                    <th style="width: 10%;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in orders %}
-                <tr>
-                    <td>{{ order.order_number }}</td>
-                    <td>{{ order.customer.customer_name }}</td>
-                    <td>{{ order.order_date_time|date:"Y-m-d H:i" }}</td>
-                    <td>${{ order.grand_total|floatformat:2 }}</td>
-                    <td>
-                        <span class="status-pill status-{{ order.order_status }}">
-                            {{ order.order_status }}
-                        </span>
-                    </td>
-                    <td>
-                        <a href="{% url 'adminpanel_order_detail' order_pk=order.order_number %}">
-                            View/Edit
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p>No customer orders have been placed yet.</p>
-        {% endif %}
-
+      {% if orders %}
+      <table class="order-table">
+        <thead>
+          <tr>
+            <th style="width: 15%">Order No.</th>
+            <th style="width: 25%">Customer</th>
+            <th style="width: 20%">Date Placed</th>
+            <th style="width: 15%">Total</th>
+            <th style="width: 15%">Status</th>
+            <th style="width: 10%">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+          <tr>
+            <td>{{ order.order_number }}</td>
+            <td>{{ order.customer.customer_name }}</td>
+            <td>{{ order.order_date_time|date:"Y-m-d H:i" }}</td>
+            <td>${{ order.grand_total|floatformat:2 }}</td>
+            <td>
+              <span class="status-pill status-{{ order.order_status }}">
+                {{ order.order_status }}
+              </span>
+            </td>
+            <td>
+              <a
+                href="{% url 'adminpanel:adminpanel_order_detail' order_pk=order.order_number %}"
+              >
+                View/Edit
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p>No customer orders have been placed yet.</p>
+      {% endif %}
     </div>
-</body>
+  </body>
 </html>

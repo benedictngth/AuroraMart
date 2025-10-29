@@ -21,7 +21,7 @@ def product_list(request):
     current_filter_params = ''
     current_sort = 'name_asc'
 
-    breadcrumb = [{'name': 'All Products', 'url': reverse('product_list')}]
+    breadcrumb = [{'name': 'All Products', 'url': reverse('onlinestore:product_list')}]
     
     category_id = request.GET.get('category')
     subcategory_id = request.GET.get('subcategory')
@@ -44,12 +44,12 @@ def product_list(request):
             parent_category = subcategory_obj.category
             breadcrumb.append({
                 'name': parent_category.category_name, 
-                'url': f"{reverse('product_list')}?category={parent_category.id}"
+                'url': f"{reverse('onlinestore:product_list')}?category={parent_category.id}"
             })
             
             breadcrumb.append({
                 'name': subcategory_name, 
-                'url': f"{reverse('product_list')}?subcategory={subcategory_obj.id}"
+                'url': f"{reverse('onlinestore:product_list')}?subcategory={subcategory_obj.id}"
             })
 
         except Subcategory.DoesNotExist:

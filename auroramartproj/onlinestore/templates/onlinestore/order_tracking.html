@@ -1,82 +1,107 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AuroraMart | Track Your Order</title>
+    <link rel="stylesheet" href="{% static 'onlinestore/css/style.css' %}" />
+    <link
+      rel="stylesheet"
+      href="{% static 'onlinestore/css/cart_style.css' %}"
+    />
+  </head>
 
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>AuroraMart | Track Your Order</title>
-        <link rel="stylesheet" href="{% static 'onlinestore/css/style.css' %}" />
-        <link rel="stylesheet" href="{% static 'onlinestore/css/cart_style.css' %}" />
-    </head>
+  <body>
+    {% include 'onlinestore/_navBar.html' %}
 
-    <body>
-        {% include 'onlinestore/_navBar.html' %}
+    <main class="confirmation-page-wrapper">
+      <h1 class="cart-header">Track Your Order 🔍</h1>
 
-        <main class="confirmation-page-wrapper">
-            <h1 class="cart-header">Track Your Order 🔍</h1>
+      <form
+        method="get"
+        action="{% url 'order_tracking' %}"
+        class="tracking-form"
+      >
+        <label for="order_number">Enter Order Number:</label>
+        <input
+          type="text"
+          id="order_number"
+          name="order_number"
+          value="{{ order_number_input|default:'' }}"
+          placeholder="e.g., A12345678"
+          required
+        />
+        <button type="submit">Track Order</button>
+      </form>
 
-            <form method="get" action="{% url 'order_tracking' %}" class="tracking-form">
-                <label for="order_number">Enter Order Number:</label>
-                <input type="text" id="order_number" name="order_number" 
-                       value="{{ order_number_input|default:'' }}" 
-                       placeholder="e.g., A12345678" required>
-                <button type="submit">Track Order</button>
-            </form>
+      {% if error_message %}
+      <p class="error-msg">{{ error_message }}</p>
 
-            {% if error_message %}
-                <p class="error-msg">{{ error_message }}</p>
+      {% elif order %}
+      <div class="order-details-card">
+        <h2>Order Status</h2>
+        <p>
+          <strong>Order Number:</strong> {{ order.order_number }}
+          <span class="status-pill status-{{ order.order_status }}">
+            {{ order.order_status }}
+          </span>
+        </p>
+        <p>
+          <strong>Order Date:</strong> {{ order.order_date_time | date:"F d, Y
+          P" }}
+        </p>
+        <p>
+          <strong>Shipping To:</strong> {{ order.customer.customer_address |
+          linebreaksbr }}
+        </p>
 
-            {% elif order %}
-                <div class="order-details-card">
-                    <h2>Order Status</h2>
-                    <p>
-                        <strong>Order Number:</strong> {{ order.order_number }}
-                        <span class="status-pill status-{{ order.order_status }}">
-                            {{ order.order_status }}
-                        </span>
-                    </p>
-                    <p><strong>Order Date:</strong> {{ order.order_date_time | date:"F d, Y P" }}</p>
-                    <p><strong>Shipping To:</strong> {{ order.customer.customer_address | linebreaksbr }}</p>
+        <hr style="margin: 20px 0" />
 
-                    <hr style="margin: 20px 0;">
+        <h3>Order Summary</h3>
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th style="text-align: center">Quantity</th>
+              <th>Unit Price</th>
+              <th style="text-align: right">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in order_items %}
+            <tr>
+              <td>{{ item.product.product_name }}</td>
+              <td style="text-align: center">{{ item.quantity }}</td>
+              <td>${{ item.purchased_price | floatformat:2 }}</td>
+              <td style="text-align: right">
+                ${{ item.line_subtotal | floatformat:2 }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" class="total-row">Grand Total:</td>
+              <td class="total-row" style="text-align: right">
+                <strong>${{ order.grand_total | floatformat:2 }}</strong>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
 
-                    <h3>Order Summary</h3>
-                    <table class="cart-table">
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th style="text-align: center;">Quantity</th>
-                                <th>Unit Price</th>
-                                <th style="text-align: right">Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in order_items %}
-                            <tr>
-                                <td>{{ item.product.product_name }}</td>
-                                <td style="text-align: center;">{{ item.quantity }}</td>
-                                <td>${{ item.purchased_price | floatformat:2 }}</td>
-                                <td style="text-align: right">${{ item.line_subtotal | floatformat:2 }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="3" class="total-row">Grand Total:</td>
-                                <td class="total-row" style="text-align: right">
-                                    <strong>${{ order.grand_total | floatformat:2 }}</strong>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-
-                    <a href="{% url 'product_list' %}" class="continue-shopping-btn">Continue Shopping</a>
-                </div>
-            {% else %}
-                <p class="info-msg">Enter a valid order number above to see the status and details of your shipment.</p>
-            {% endif %}
-        </main>
-    </body>
-
+        <a
+          href="{% url 'onlinestore:product_list' %}"
+          class="continue-shopping-btn"
+          >Continue Shopping</a
+        >
+      </div>
+      {% else %}
+      <p class="info-msg">
+        Enter a valid order number above to see the status and details of your
+        shipment.
+      </p>
+      {% endif %}
+    </main>
+  </body>
 </html>
