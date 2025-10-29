@@ -5,6 +5,9 @@ app_name = "adminpanel"
 # This list will hold your custom URL patterns for the adminpanel app
 urlpatterns = [
     path('dashboard/', views.staff_landing, name='staff_landing'),
+
+    path('metrics/', views.metrics_dashboard, name='metrics_dashboard'),
+    
     path("order_list/", views.order_list, name="adminpanel_order_list"),
     path("order_detail/<str:order_pk>/", views.order_detail, name="adminpanel_order_detail"),
     

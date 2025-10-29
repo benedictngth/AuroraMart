@@ -4,12 +4,179 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Modify Product</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f7f9;
+        margin: 0;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      }
+
+      .detail-section {
+        padding: 20px 0;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .detail-section:last-child {
+        border-bottom: none;
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-top: 15px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      .form-group input:not([type="checkbox"]),
+      .form-group select,
+      .form-group textarea {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1em;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+
+      .form-group input[type="checkbox"] {
+        width: auto;
+        margin-right: 10px;
+      }
+
+      button[type="submit"] {
+        padding: 12px 25px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1.1em;
+        margin-top: 20px;
+        transition: background-color 0.2s;
+      }
+
+      button[type="submit"]:hover {
+        background-color: #0056b3;
+      }
+
+      .errorlist {
+        color: #dc3545;
+        list-style: none;
+        padding-left: 0;
+        margin-top: 5px;
+        font-size: 0.9em;
+      }
+    </style>
   </head>
   <body>
-    <h1>Modify Product</h1>
-    <form method= "post"> 
-        {% csrf_token %} {{form}}
-        
-        <button type = "submit">Submit</button>
+    <div class="container">
+      <a href="{% url 'adminpanel:adminpanel_product_list' %}"
+        >← Back to Product List</a
+      >
+      <h1>Modify Product</h1>
+      <hr />
+
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="detail-section">
+          <h2>Basic Details</h2>
+          <div class="info-grid">
+            <div class="form-group">
+              {{ form.sku_code.label_tag }}
+              {{ form.sku_code }}
+              {{ form.sku_code.errors }}
+            </div>
+            <div class="form-group">
+              {{ form.product_name.label_tag }}
+              {{ form.product_name }}
+              {{ form.product_name.errors }}
+            </div>
+          </div>
+          <div class="form-group">
+            {{ form.product_description.label_tag }}
+            {{ form.product_description }}
+            {{ form.product_description.errors }}
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h2>Categorization & Pricing</h2>
+          <div class="info-grid">
+            <div class="form-group">
+              {{ form.category.label_tag }}
+              {{ form.category }}
+              {{ form.category.errors }}
+            </div>
+            <div class="form-group">
+              {{ form.subcategory.label_tag }}
+              {{ form.subcategory }}
+              {{ form.subcategory.errors }}
+            </div>
+            <div class="form-group">
+              {{ form.unit_price.label_tag }}
+              {{ form.unit_price }}
+              {{ form.unit_price.errors }}
+            </div>
+            <div class="form-group">
+              {{ form.product_rating.label_tag }}
+              {{ form.product_rating }}
+              {{ form.product_rating.errors }}
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h2>Inventory</h2>
+          <div class="info-grid">
+            <div class="form-group">
+              {{ form.quantity_on_hand.label_tag }}
+              {{ form.quantity_on_hand }}
+              {{ form.quantity_on_hand.errors }}
+            </div>
+            <div class="form-group">
+              {{ form.reorder_quantity.label_tag }}
+              {{ form.reorder_quantity }}
+              {{ form.reorder_quantity.errors }}
+            </div>
+            <div class="form-group" style="grid-column: 1 / span 2;">
+                <label>
+                    {{ form.is_active }}
+                    {{ form.is_active.label }}
+                </label>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit">Save Changes</button>
+      </form>
+    </div>
   </body>
 </html>

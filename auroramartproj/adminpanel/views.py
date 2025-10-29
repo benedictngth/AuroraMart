@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from onlinestore.models import Product, Order, OrderItem
+from onlinestore.models import Product, Order, OrderItem, Category
 from .forms import ProductForm, StaffLoginForm, StaffRegistrationForm, StaffProductFilterForm, StaffProductSortForm, OrderStatusForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
-from django.db.models import Q
+from django.db.models import Q, Sum, Count
+from django.db.models.functions import Coalesce
+from decimal import Decimal
+from django.utils import timezone
+from datetime import timedelta
 
 def staff_check(user):
     """Checks if the user is authenticated and a staff member."""
@@ -200,3 +204,57 @@ def order_detail(request, order_pk):
         'page_title': f'Order Details: {order.order_number}',
     }
     return render(request, "adminpanel/order_detail.html", context)
+
+@user_passes_test(staff_check, login_url='/adminpanel/login/')
+def metrics_dashboard(request):
+    """Calculates and displays all 5 dashboard metrics."""
+
+    now = timezone.now()
+    yesterday = now - timedelta(days=1)
+    last_week = now - timedelta(weeks=1)
+    last_month = now - timedelta(days=30)
+    
+    order_metrics = {
+        'day': Order.objects.filter(order_date_time__gte=yesterday).count(),
+        'week': Order.objects.filter(order_date_time__gte=last_week).count(),
+        'month': Order.objects.filter(order_date_time__gte=last_month).count(),
+        'all_time': Order.objects.count(),
+    }
+    
+    top_selling_items = OrderItem.objects.filter(
+        order__order_date_time__gte=last_month
+    ).values('product__product_name').annotate(
+        total_qty=Sum('quantity')
+    ).order_by('-total_qty')[:5]
+    
+    low_stock_items = Product.objects.filter(
+        quantity_on_hand__lt=10
+    ).order_by('quantity_on_hand', 'product_name')
+    
+    last_month_filter = Q(product__orderitem__order__order_date_time__gte=last_month)
+
+    all_categories_performance = Category.objects.all().annotate(
+        total_revenue=Coalesce(
+            Sum(
+                'product__orderitem__line_subtotal', 
+                filter=last_month_filter
+            ), 
+            Decimal(0)
+        )
+    ).values('category_name', 'total_revenue')
+
+    best_categories = all_categories_performance.order_by('-total_revenue')[:5]
+
+    worst_categories = all_categories_performance.order_by('total_revenue')[:5]
+
+
+    context = {
+        'page_title': "Sales & Inventory Dashboard",
+        'order_metrics': order_metrics,
+        'top_selling_items': top_selling_items,
+        'low_stock_items': low_stock_items,
+        'best_categories': best_categories,
+        'worst_categories': worst_categories,
+    }
+
+    return render(request, 'adminpanel/metrics_dashboard.html', context)
