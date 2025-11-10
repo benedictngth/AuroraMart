@@ -69,7 +69,7 @@ def edit_profile_view(request):
     try:
         profile = request.user.customer.customerprofile
     except (Customer.DoesNotExist, CustomerProfile.DoesNotExist):
-        return redirect('create_profile') 
+        return redirect('onlinestore:create_profile') 
 
     if request.method == 'POST':
         form = CustomerProfileForm(request.POST, instance=profile)

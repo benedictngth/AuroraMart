@@ -1,5 +1,5 @@
 from .models import Category, Subcategory, CustomerProfile
-from .utils import predict_preferred_category 
+from .utils import predict_preferred_category, get_recommended_category 
 
 def nav_bar_data(request):
     categories = Category.objects.all().order_by('category_name')
@@ -24,30 +24,4 @@ def cart_item_count(request):
     }
 
 def recommended_category_processor(request):
-    recommended_category_name = None
-
-    if request.user.is_authenticated:
-        try:
-    #age, gender, household_size, has_children, monthly_income_sgd, employment_status, occupation, education
-            profile = request.user.customer.customerprofile
-            
-            customer_data = {
-                'age': profile.age,
-                'gender': profile.gender,
-                'household_size': profile.household_size,
-                'has_children': profile.has_children,
-                'monthly_income_sgd': profile.monthly_income,
-                'employment_status': profile.employment_status,
-                'occupation': profile.occupation,
-                'education': profile.education
-            }
-            # Get the first element from the prediction array
-            recommended_category_name = predict_preferred_category(customer_data)[0]
-
-        except (CustomerProfile.DoesNotExist, AttributeError):
-            # This will catch cases where the user has no customer or profile yet
-            pass
-    print(recommended_category_name)
-    return {
-        'recommended_category': recommended_category_name
-    }
+    return {'recommended_category': get_recommended_category(request.user)}

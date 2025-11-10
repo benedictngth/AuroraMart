@@ -1,7 +1,7 @@
 import pandas as pd
 import joblib
 import sklearn
-from .models import Product
+from .models import CustomerProfile, Product
 def predict_preferred_category(customer_data): 
     #customer data dict of age, gender, household_size, has_children, monthly_income_sgd, employment_status, occupation, education
     loaded_model = joblib.load('onlinestore/mlmodel/b2c_customers_100.joblib')
@@ -64,3 +64,22 @@ def get_recommendations(items, metric='confidence', top_n=3):
         except Product.DoesNotExist:
             pass
     return product_recs
+
+def get_recommended_category(user):
+    if not user.is_authenticated:
+        return None
+    try:
+        profile = user.customer.customerprofile
+        customer_data = {
+            'age': profile.age,
+            'gender': profile.gender,
+            'household_size': profile.household_size,
+            'has_children': profile.has_children,
+            'monthly_income_sgd': profile.monthly_income,
+            'employment_status': profile.employment_status,
+            'occupation': profile.occupation,
+            'education': profile.education
+        }
+        return predict_preferred_category(customer_data)[0]
+    except (CustomerProfile.DoesNotExist, AttributeError):
+        return None

@@ -17,6 +17,23 @@
           Explore thousands of products across all our categories above.
         </p>
       </div>
+      {% if user.is_authenticated and recommended_category %}
+      <div class="recommended-section">
+        <h2>Recommended Category is {{ recommended_category }}</h2>
+        <h3>Products you may like:</h3>
+        {% for product in products %}
+        <div class="product-card">
+          <h3 class="product-name">{{ product.product_name }}</h3>
+          <p class="product-price">${{ product.unit_price }}</p>
+          <a
+            href="{% url 'onlinestore:product_detail' product_pk=product.pk %}"
+            class="view-details-btn"
+            >View Details</a
+          >
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
     </main>
   </body>
 </html>

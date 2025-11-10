@@ -211,7 +211,26 @@ header {
     max-width: 1200px;
     margin: 40px auto;
     padding: 0 var(--page-padding-x);
-    text-align: center;
+    text-align: center; /* Keep this for the lead section */
+}
+
+.recommended-section {
+    text-align: left; /* Left-align the text */
+    margin-top: 40px;
+    margin-left: 0; /* Align to the left */
+    margin-right: auto; /* Push to the left within the centered parent */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.recommended-section h2,
+.recommended-section h3 {
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: left; /* Explicitly left-align headings */
 }
 
 .lead-section {
@@ -269,6 +288,7 @@ header {
     display: flex;
     flex-direction: column;
     transition: transform 0.2s, box-shadow 0.2s;
+    gap: 20px;
 }
 
 .product-card:hover {

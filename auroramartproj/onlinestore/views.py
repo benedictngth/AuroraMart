@@ -2,14 +2,15 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from .models import Product, Category, Subcategory
 from django.contrib.auth.decorators import login_required
-from .utils import get_recommendations
+from .utils import get_recommendations, get_recommended_category
 from .forms import ProductSortForm, ProductFilterForm
 from .models import CustomerProfile
 
 
 def landing_page(request): 
-
-    return render(request, 'onlinestore/home.html')
+    recommended_category = get_recommended_category(request.user)
+    products = Product.objects.filter(category__category_name=recommended_category)[:5] 
+    return render(request, 'onlinestore/home.html', {'recommended_category': recommended_category, 'products': products})
 
 @login_required
 def product_list(request):
