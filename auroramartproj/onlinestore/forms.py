@@ -36,8 +36,8 @@ class CustomerProfileForm(forms.ModelForm):
             'employment_status': forms.Select(attrs={'class': 'form-control'}),
             'occupation': forms.Select(attrs={'class': 'form-control'}),
             'education': forms.Select(attrs={'class': 'form-control'}),
-            'age': forms.NumberInput(attrs={'class': 'form-control', 'min': 0}),
-            'household_size': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
+            'age': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'max': 100}),
+            'household_size': forms.NumberInput(attrs={'class': 'form-control', 'min': 1, 'max': 20}),
             'monthly_income': forms.NumberInput(attrs={'class': 'form-control', 'min': 0}),
         }
 

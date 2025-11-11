@@ -11,11 +11,26 @@
     {% include 'onlinestore/_navBar.html' %}
     <main class="login-content">
       <div class="login-container">
-        <h2>Step 2: Complete Your Profile (Optional)</h2>
-        <p>You can fill this out now, or skip and do it later.</p>
-        <form method="post">
-          {% csrf_token %} {{ form }}
+        <h2>Complete Your Profile</h2>
+        <p>Fill this out now, or get back to it later.</p>
+        <form method="post" class="profile-form">
+          {% csrf_token %}
+          <div class="form-fields">
+            {% for field in form %}
+              <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                  <small class="form-help-text">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                  <p class="error-message">{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endfor %}
+          </div>
           <button type="submit" class="submit-btn">Save Profile</button>
+          <a href="{% url 'onlinestore:landing_page' %}" class="skip-btn">Skip for now</a>
         </form>
       </div>
     </main>

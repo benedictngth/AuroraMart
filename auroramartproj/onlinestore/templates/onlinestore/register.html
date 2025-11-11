@@ -12,8 +12,22 @@
     <main class="login-content">
       <div class="login-container">
         <h2>Create Your Account</h2>
-        <form method="post">
-          {% csrf_token %} {{ form }}
+        <form method="post" class="register-form"> 
+          {% csrf_token %}
+          <div class="form-fields">
+            {% for field in form %}
+              <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                  <small class="form-help-text">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                  <p class="error-message">{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endfor %}
+          </div>
           <button type="submit" class="submit-btn">Register</button>
         </form>
       </div>

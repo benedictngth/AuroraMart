@@ -100,5 +100,11 @@
         </div>
       </nav>
     </header>
+    
+    {% if user.is_authenticated and not user.customer.customerprofile|default:None %}
+    <div class="profile-completion-prompt">
+        Your profile is incomplete! <a href="{% url 'onlinestore:create_profile' %}">Complete your profile now</a> for a better experience.
+    </div>
+    {% endif %}
   </body>
 </html>
