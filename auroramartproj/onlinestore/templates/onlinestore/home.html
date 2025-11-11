@@ -38,21 +38,21 @@
         </div>
       </div>
       {% endif %}
-
-      {% if recently_carted_products %}
+      
+      {% if popular_products %}
       <div class="recommended-section">
-        <h2>OTHERS RECENTLY PURCHASED</h2>
+        <h2>ALL-TIME CUSTOMER FAVOURITES</h2>
         <div class="carousel-container">
           <div class="carousel-track">
-            {% for product in recently_carted_products %}
+            {% for product in popular_products %}
             <div class="carousel-card">
               <span class="product-category-pill">{{ product.category.category_name }}</span>
               <h3 class="product-name">{{ product.product_name }}</h3>
               <p class="product-price">${{ product.unit_price }}</p>
               <a
-                href="{% url 'onlinestore:product_detail' product_pk=product.pk %}"
-                class="view-details-btn"
-                >View Details</a
+              href="{% url 'onlinestore:product_detail' product_pk=product.pk %}"
+              class="view-details-btn"
+              >View Details</a
               >
             </div>
             {% endfor %}
@@ -60,13 +60,13 @@
         </div>
       </div>
       {% endif %}
-
-      {% if popular_products %}
+      
+      {% if recently_carted_products %}
       <div class="recommended-section">
-        <h2>ALL-TIME CUSTOMER FAVOURITES</h2>
+        <h2>OTHERS RECENTLY PURCHASED</h2>
         <div class="carousel-container">
           <div class="carousel-track">
-            {% for product in popular_products %}
+            {% for product in recently_carted_products %}
             <div class="carousel-card">
               <span class="product-category-pill">{{ product.category.category_name }}</span>
               <h3 class="product-name">{{ product.product_name }}</h3>
@@ -127,5 +127,9 @@
       </div>
       {% endif %}
     </main>
+    <h1 style="text-align: center;">Not sure where to start?</h1>
+    <div class="shop-all-container">
+      <a href="{% url 'onlinestore:product_list' %}" class="shop-all-btn">Shop All Products</a>
+    </div>
   </body>
 </html>

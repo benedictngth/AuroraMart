@@ -7,8 +7,14 @@ from urllib.parse import urlencode
 from django.db import transaction
 from .models import Product, Order, OrderItem, Customer
 from .views_order import generate_order_number
+from django.contrib import messages
 
 def add_to_cart(request, product_pk):
+    if not request.user.is_authenticated:
+        messages.info(request, "Please log in to add items to your cart.")
+        next_url = request.META.get('HTTP_REFERER', reverse('onlinestore:product_list'))
+        return redirect(f"{reverse('onlinestore:login')}?next={next_url}")
+    
     cart = request.session.get('cart', {})
     product = get_object_or_404(Product, pk=str(product_pk)) 
 
@@ -40,7 +46,7 @@ def add_to_cart(request, product_pk):
     next_page = request.POST.get('next_page')
     
     if next_page == 'cart_detail':
-        return redirect('cart_detail')
+        return redirect('onlinestore:cart_detail')
 
     category_id = request.POST.get('category')
     subcategory_id = request.POST.get('subcategory')
@@ -58,6 +64,9 @@ def add_to_cart(request, product_pk):
     return redirect(url)
 
 def cart_detail(request):
+    if not request.user.is_authenticated:
+        messages.info(request, "Please log in to view your cart.")
+        return redirect(reverse('onlinestore:login'))
 
     cart = request.session.get('cart', {})
     cart_items = []
@@ -91,6 +100,10 @@ def cart_detail(request):
     return render(request, 'onlinestore/cart_detail.html', context) 
 
 def remove_from_cart(request, product_pk):
+    if not request.user.is_authenticated:
+        messages.info(request, "Please log in to manage your cart.")
+        return redirect(reverse('onlinestore:login'))
+    
     cart = request.session.get('cart', {})
 
     product = get_object_or_404(Product, pk=str(product_pk)) 
@@ -106,17 +119,22 @@ def remove_from_cart(request, product_pk):
 @require_POST
 def checkout(request):
     if not request.user.is_authenticated: #non-logged in customers
-        return redirect('login') 
+        messages.info(request, "Please log in to proceed with checkout.")
+        next_url = request.META.get('HTTP_REFERER', reverse('onlinestore:cart_detail'))
+        return redirect(f"{reverse('onlinestore:login')}?next={next_url}")
     
-    cart = request.session.get('cart', {})
-    if not cart: # if empty cart
-        return redirect('onlinestore:cart_detail')
-
     try:
         customer = Customer.objects.get(user=request.user)
     except Customer.DoesNotExist:
-        return redirect('onlinestore:login') 
+        messages.error(request, "Customer profile not found. Please complete your profile before checking out.")
+        return redirect(reverse('onlinestore:create_profile'))
 
+    cart = request.session.get('cart', {}) 
+
+    if not cart:
+        messages.warning(request, "Your cart is empty.")
+        return redirect('onlinestore:cart_detail')
+    
     grand_total = Decimal(0)
     order_items_data = []
     product_skus = cart.keys()

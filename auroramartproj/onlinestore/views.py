@@ -39,7 +39,6 @@ def landing_page(request):
 
     return render(request, 'onlinestore/home.html', context)
 
-@login_required
 def product_list(request):
     filter_form = ProductFilterForm(request.GET)
     sort_form = ProductSortForm(request.GET)
@@ -160,7 +159,6 @@ def product_list(request):
     }
     return render(request, 'onlinestore/product_list.html', context) 
 
-@login_required
 def product_detail(request, product_pk):
     product = get_object_or_404(Product, pk=product_pk, is_active=True)
     cart = request.session.get('cart', {})

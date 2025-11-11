@@ -15,7 +15,11 @@ def login_view(request):
             user = authenticate(request, username=username, password=password)
             if user is not None: 
                 login(request, user)
-                return redirect("onlinestore:landing_page") 
+                next_url = request.GET.get('next')
+                if next_url:
+                    return redirect(next_url)
+                else:
+                    return redirect("onlinestore:landing_page") 
             else:
                 form.add_error(None, "Invalid username or password")
         return render(request, "onlinestore/login.html", {'form': form})

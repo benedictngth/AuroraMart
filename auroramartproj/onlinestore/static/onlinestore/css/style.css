@@ -894,3 +894,26 @@ header {
 .profile-completion-prompt a:hover {
     color: #003d80;
 }
+
+.shop-all-container {
+    text-align: center; 
+    margin: 10px 0 40px 0; 
+}
+
+.shop-all-btn {
+    display: inline-block;
+    background-color: var(--primary-color); 
+    color: white;
+    padding: 15px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.shop-all-btn:hover {
+    background-color: var(--secondary-color); 
+    transform: translateY(-2px); 
+}
