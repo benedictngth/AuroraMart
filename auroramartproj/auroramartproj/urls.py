@@ -22,6 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('adminpanel/', include("adminpanel.urls")),
     path('onlinestore/', include("onlinestore.urls")), 
-    path('onlinestore/', include('onlinestore.urls', namespace='onlinestore')),
     path('', views.index, name = "index")
 ]

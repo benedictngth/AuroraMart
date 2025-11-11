@@ -440,6 +440,7 @@ header {
     color: white;
     border: none;
     padding: 10px 20px;
+    margin-right: 10px;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -652,16 +653,10 @@ header {
 .carousel-track {
     display: flex;
     overflow-x: scroll;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x proximity;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
     gap: 20px;
     padding-bottom: 15px;
-}
-
-.carousel-track::-webkit-scrollbar {
-    display: none;
 }
 
 .carousel-card {
