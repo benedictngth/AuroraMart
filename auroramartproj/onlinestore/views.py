@@ -1,16 +1,43 @@
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
-from .models import Product, Category, Subcategory
+from .models import Product, Category, Subcategory, Order, OrderItem
 from django.contrib.auth.decorators import login_required
 from .utils import get_recommendations, get_recommended_category
 from .forms import ProductSortForm, ProductFilterForm
 from .models import CustomerProfile
+from django.db.models import Sum
 
 
 def landing_page(request): 
+    # reccomended products by user profile
     recommended_category = get_recommended_category(request.user)
-    products = Product.objects.filter(category__category_name=recommended_category)[:5] 
-    return render(request, 'onlinestore/home.html', {'recommended_category': recommended_category, 'products': products})
+    userprofile_products = Product.objects.filter(category__category_name=recommended_category, is_active=True)[:10] 
+
+    # reccomended products by recent purchased items by all users
+    recent_order_item_products_ids = OrderItem.objects.order_by('-order__order_date_time').values_list('product_id', flat=True).distinct()[:10]
+    recently_carted_products = Product.objects.filter(sku_code__in=recent_order_item_products_ids, is_active=True)
+    
+    # top 10 products by total quantity sold
+    popular_products = Product.objects.filter(is_active=True).annotate(
+        total_sold=Sum('orderitem__quantity')
+    ).order_by('-total_sold')[:10]
+
+    # products below $5 in Low Price Deals section
+    lowest_price_products = Product.objects.filter(unit_price__lt=5, is_active=True).order_by('unit_price')[:10]
+
+    # products with highest ratings in Top Rated Products section
+    top_rated_products = Product.objects.filter(is_active=True).order_by('-product_rating')[:10]
+
+    context = {
+        'recommended_category': recommended_category,
+        'userprofile_products': userprofile_products,
+        'recently_carted_products': recently_carted_products,
+        'popular_products': popular_products,
+        'lowest_price_products': lowest_price_products,
+        'top_rated_products': top_rated_products,
+    }
+
+    return render(request, 'onlinestore/home.html', context)
 
 @login_required
 def product_list(request):
@@ -67,7 +94,7 @@ def product_list(request):
 
             breadcrumb.append({
                 'name': category_name, 
-                'url': f"{reverse('product_list')}?category={category_obj.id}"
+                'url': f"{reverse('onlinestore:product_list')}?category={category_obj.id}"
             })
 
         except Category.DoesNotExist:

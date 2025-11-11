@@ -14,24 +14,116 @@
       <div class="lead-section">
         <h1 class="lead-title">Shop Everything, Find Your Passion.</h1>
         <p class="lead-subtitle">
-          Explore thousands of products across all our categories above.
+          Explore hundreds of products across all our categories above.
         </p>
       </div>
       {% if user.is_authenticated and recommended_category %}
       <div class="recommended-section">
-        <h2>Recommended Category is {{ recommended_category }}</h2>
-        <h3>Products you may like:</h3>
-        {% for product in products %}
-        <div class="product-card">
-          <h3 class="product-name">{{ product.product_name }}</h3>
-          <p class="product-price">${{ product.unit_price }}</p>
-          <a
-            href="{% url 'onlinestore:product_detail' product_pk=product.pk %}"
-            class="view-details-btn"
-            >View Details</a
-          >
+        <h2>RECCOMENDED FOR YOU: {{ recommended_category }}</h2>
+        <div class="carousel-container">
+          <div class="carousel-track">
+            {% for product in userprofile_products %}
+            <div class="carousel-card">
+              <span class="product-category-pill">{{ product.category.category_name }}</span>
+              <h3 class="product-name">{{ product.product_name }}</h3>
+              <p class="product-price">${{ product.unit_price }}</p>
+              <a
+                href="{% url 'onlinestore:product_detail' product_pk=product.pk %}"
+                class="view-details-btn"
+                >View Details</a
+              >
+            </div>
+            {% endfor %}
+          </div>
         </div>
-        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if recently_carted_products %}
+      <div class="recommended-section">
+        <h2>OTHERS RECENTLY PURCHASED</h2>
+        <div class="carousel-container">
+          <div class="carousel-track">
+            {% for product in recently_carted_products %}
+            <div class="carousel-card">
+              <span class="product-category-pill">{{ product.category.category_name }}</span>
+              <h3 class="product-name">{{ product.product_name }}</h3>
+              <p class="product-price">${{ product.unit_price }}</p>
+              <a
+                href="{% url 'onlinestore:product_detail' product_pk=product.pk %}"
+                class="view-details-btn"
+                >View Details</a
+              >
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if popular_products %}
+      <div class="recommended-section">
+        <h2>ALL-TIME CUSTOMER FAVOURITES</h2>
+        <div class="carousel-container">
+          <div class="carousel-track">
+            {% for product in popular_products %}
+            <div class="carousel-card">
+              <span class="product-category-pill">{{ product.category.category_name }}</span>
+              <h3 class="product-name">{{ product.product_name }}</h3>
+              <p class="product-price">${{ product.unit_price }}</p>
+              <a
+                href="{% url 'onlinestore:product_detail' product_pk=product.pk %}"
+                class="view-details-btn"
+                >View Details</a
+              >
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if lowest_price_products %}
+      <div class="recommended-section">
+        <h2>LOWEST PRICES GUARANTEED!!</h2>
+        <div class="carousel-container">
+          <div class="carousel-track">
+            {% for product in lowest_price_products %}
+            <div class="carousel-card">
+              <span class="product-category-pill">{{ product.category.category_name }}</span>
+              <h3 class="product-name">{{ product.product_name }}</h3>
+              <p class="product-price">${{ product.unit_price }}</p>
+              <a
+                href="{% url 'onlinestore:product_detail' product_pk=product.pk %}"
+                class="view-details-btn"
+                >View Details</a
+              >
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if top_rated_products %}
+      <div class="recommended-section">
+        <h2>TOP RATED PRODUCTS</h2>
+        <div class="carousel-container">
+          <div class="carousel-track">
+            {% for product in top_rated_products %}
+            <div class="carousel-card">
+              <span class="product-category-pill">{{ product.category.category_name }}</span>
+              <h3 class="product-name">{{ product.product_name }}</h3>
+              <p class="product-price">${{ product.unit_price }}</p>
+              <a
+                href="{% url 'onlinestore:product_detail' product_pk=product.pk %}"
+                class="view-details-btn"
+                >View Details</a
+              >
+            </div>
+            {% endfor %}
+          </div>
+        </div>
       </div>
       {% endif %}
     </main>

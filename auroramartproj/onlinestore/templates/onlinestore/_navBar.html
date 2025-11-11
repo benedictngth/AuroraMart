@@ -64,9 +64,12 @@
       <nav id="main-nav-menu">
         {% for item in MENU_DATA %}
         <div class="category-item">
+          {% if item.category.category_name == recommended_category %}
+          <div class="recommended-banner">Recommended for you</div>
+          {% endif %}
           <a
             href="{% url 'onlinestore:product_list' %}?category={{ item.category.id }}"
-            class="nav-category-link {% if item.category.category_name == recommended_category %}recommended{% endif %}"
+            class="nav-category-link"
           >
             {{ item.category.category_name }}
           </a>

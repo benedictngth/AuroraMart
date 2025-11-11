@@ -20,7 +20,7 @@
 
       <form
         method="get"
-        action="{% url 'order_tracking' %}"
+        action="{% url 'onlinestore:order_tracking' %}"
         class="tracking-form"
       >
         <label for="order_number">Enter Order Number:</label>
@@ -48,12 +48,10 @@
           </span>
         </p>
         <p>
-          <strong>Order Date:</strong> {{ order.order_date_time | date:"F d, Y
-          P" }}
+          <strong>Order Date:</strong> {{ order.order_date_time | date:"F d, Y P" }}
         </p>
         <p>
-          <strong>Shipping To:</strong> {{ order.customer.customer_address |
-          linebreaksbr }}
+          <strong>Shipping To:</strong> {{ order.customer.customer_address | linebreaksbr }}
         </p>
 
         <hr style="margin: 20px 0" />
