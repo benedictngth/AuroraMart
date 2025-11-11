@@ -94,3 +94,12 @@ class StaffRegistrationForm(forms.ModelForm):
         if password and password_confirm and password != password_confirm:
             raise forms.ValidationError("Passwords do not match.")
         return password_confirm
+
+class SubcategoryForm(forms.ModelForm):
+    class Meta:
+        model = Subcategory
+        fields = ['category', 'subcategory_name']
+        widgets = {
+            'category': forms.Select(attrs={'class': 'form-control'}),
+            'subcategory_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., Smartphones'}),
+        }

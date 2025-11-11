@@ -73,7 +73,16 @@
       >
         <span class="cell-icon">📦</span>
         <div class="cell-title">Manage Products</div>
-        <p>View, modify, and deactivate items.</p>
+        <p>View, create, and modify product listings.</p>
+      </a>
+
+      <a
+        href="{% url 'adminpanel:adminpanel_create_subcategory' %}"
+        class="dashboard-cell"
+      >
+        <span class="cell-icon">📂</span>
+        <div class="cell-title">Create Subcategory</div>
+        <p>Add new subcategories to product categories.</p>
       </a>
 
       <a
@@ -85,10 +94,7 @@
         <p>Track, process, and update customer orders.</p>
       </a>
 
-      <a
-        href="{% url 'adminpanel:metrics_dashboard' %}"
-        class="dashboard-cell"
-      >
+      <a href="{% url 'adminpanel:metrics_dashboard' %}" class="dashboard-cell">
         <span class="cell-icon">📈</span>
         <div class="cell-title">Sales Dashboard</div>
         <p>View real-time sales, inventory, and performance metrics.</p>

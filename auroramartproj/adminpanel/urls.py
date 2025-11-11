@@ -17,5 +17,6 @@ urlpatterns = [
 
     path('login/', views.staff_login_view, name='staff_login'),
     path('logout/', views.staff_logout_view, name='staff_logout'),
-    path('register/', views.staff_register_view, name='staff_register'),
+    path('register/', views.staff_register_view, name='staff_register'), 
+    path('subcategory/new/', views.create_subcategory, name='adminpanel_create_subcategory'),
 ]

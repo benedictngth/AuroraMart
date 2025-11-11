@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from onlinestore.models import Product, Order, OrderItem, Category
-from .forms import ProductForm, StaffLoginForm, StaffRegistrationForm, StaffProductFilterForm, StaffProductSortForm, OrderStatusForm
+from .forms import ProductForm, StaffLoginForm, StaffRegistrationForm, StaffProductFilterForm, StaffProductSortForm, OrderStatusForm, SubcategoryForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.models import User
+from django.contrib import messages
 from django.db.models import Q, Sum, Count
 from django.db.models.functions import Coalesce
 from decimal import Decimal
@@ -170,9 +170,26 @@ def modify_product(request, product_pk):
     else: 
         
         form = ProductForm(instance=product)
-        return render(request, 'adminpanel/modify_product.html', {'form': form})
+    context = {'form': form, 'product': product, 'page_title': f"Modify {product.product_name}"}
+    return render(request, 'adminpanel/modify_product.html', context)
+
+@user_passes_test(staff_check, login_url='adminpanel:staff_login')
+def create_subcategory(request):
+    if request.method == 'POST':
+        form = SubcategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('adminpanel:staff_landing')
+    else:
+        form = SubcategoryForm()
     
-@user_passes_test(staff_check, login_url='/adminpanel/login/')
+    context = {
+        'form': form,
+        'page_title': 'Create New Subcategory'
+    }
+    return render(request, 'adminpanel/create_subcategory.html', context)
+
+@user_passes_test(staff_check, login_url='adminpanel:staff_login')
 def order_list(request):
     orders = Order.objects.all().order_by('-order_date_time')
     
