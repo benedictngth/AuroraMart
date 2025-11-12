@@ -5,6 +5,8 @@ from decimal import Decimal
 from django.urls import reverse
 from urllib.parse import urlencode
 from django.db import transaction
+
+from .utils import get_recommendations
 from .models import Product, Order, OrderItem, Customer
 from .views_order import generate_order_number
 from django.contrib import messages
@@ -91,10 +93,12 @@ def cart_detail(request):
                 'item_subtotal': item_subtotal
             })
             grand_total += item_subtotal
-    
+    recommendations = get_recommendations(product_skus, metric = "lift", top_n = 5)  
+
     context = {
         'cart_items': cart_items,
-        'grand_total': grand_total
+        'grand_total': grand_total,
+        'recommendations': recommendations
     } 
 
     return render(request, 'onlinestore/cart_detail.html', context) 

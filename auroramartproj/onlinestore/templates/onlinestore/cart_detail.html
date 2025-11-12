@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AuroraMart | Your Shopping Cart</title>
     <link rel="stylesheet" href="{% static 'onlinestore/css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'onlinestore/css/product_style.css' %}" />
     <link
       rel="stylesheet"
       href="{% static 'onlinestore/css/cart_style.css' %}"
@@ -102,6 +103,28 @@
         >Continue Shopping</a
       >
       {% endif %}
+
+      {% if recommendations %}
+        <div class="recommendations-section">
+          <h3>Based on your cart, you might also like</h3>
+          <ul class="recommendations-grid">
+            {% for recommendation in recommendations %}
+            <li class="recommendation-item">
+              <a href="{% url 'onlinestore:product_detail' product_pk=recommendation.product_sku %}?subcategory={{recommendation.product_subcategory}}">
+          {{ recommendation.product_name }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div> 
+        {% else %}
+        <div class = "no-recommendation">
+          <h3> No recommendations found</h3>
+        </div>
+        {% endif %}
+
+      </div>
+
     </main>
   </body>
 </html>

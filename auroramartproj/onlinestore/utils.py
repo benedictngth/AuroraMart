@@ -41,7 +41,7 @@ def predict_preferred_category(customer_data):
 
 # use the loaded_rules to extract recommendations
 #CleanRide Car Care Shield
-def get_recommendations(items, metric='confidence', top_n=3):
+def get_recommendations(items, metric='confidence', top_n=5):
     loaded_rules = joblib.load('onlinestore/mlmodel/b2c_products_500_transactions_50k.joblib')
     recommendations = set()
     for item in items:
