@@ -67,15 +67,11 @@
     <h1>Staff Management Portal</h1>
 
     <div class="dashboard-grid">
-      <a
-        href="{% url 'adminpanel:adminpanel_product_list' %}"
-        class="dashboard-cell"
-      >
-        <span class="cell-icon">📦</span>
-        <div class="cell-title">Manage Products</div>
-        <p>View, create, and modify product listings.</p>
+      <a href="{% url 'adminpanel:staff_register' %}" class="dashboard-cell">
+        <span class="cell-icon">👤</span>
+        <div class="cell-title">Register New Staff</div>
+        <p>Create a new Staff account.</p>
       </a>
-
       <a
         href="{% url 'adminpanel:adminpanel_create_subcategory' %}"
         class="dashboard-cell"
@@ -83,6 +79,15 @@
         <span class="cell-icon">📂</span>
         <div class="cell-title">Create Subcategory</div>
         <p>Add new subcategories to product categories.</p>
+      </a>
+  
+      <a
+        href="{% url 'adminpanel:adminpanel_product_list' %}"
+        class="dashboard-cell"
+      >
+      <span class="cell-icon">📦</span>
+        <div class="cell-title">Manage Products</div>
+        <p>View, create, and modify product listings.</p>
       </a>
 
       <a

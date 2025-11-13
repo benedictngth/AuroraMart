@@ -122,53 +122,23 @@ def new_product(request):
     if request.method == "POST": 
         form = ProductForm(request.POST)
         if form.is_valid():
-            sku_code = form.cleaned_data['sku_code'] 
-            category = form.cleaned_data['category']
-            subcategory = form.cleaned_data['subcategory']
-            product_name = form.cleaned_data['product_name']
-            product_description = form.cleaned_data['product_description']
-            unit_price = form.cleaned_data['unit_price']
-            product_rating = form.cleaned_data['product_rating']
-            quantity_on_hand = form.cleaned_data['quantity_on_hand']
-            reorder_quantity = form.cleaned_data['reorder_quantity']
-            
-            product = Product(
-                sku_code=sku_code,
-                category=category,
-                subcategory=subcategory,
-                product_name=product_name,
-                product_description=product_description,
-                unit_price=unit_price,
-                product_rating=product_rating,
-                quantity_on_hand=quantity_on_hand,
-                reorder_quantity=reorder_quantity
-            )
-            product.save() 
-        return redirect("adminpanel:adminpanel_product_list")
-        
+            form.save()
+            messages.success(request, "Product created.")
+            return redirect("adminpanel:adminpanel_product_list")
     else:
         form = ProductForm()
-        return render(request, 'adminpanel/create_product.html', {'form': form})
+    return render(request, 'adminpanel/create_product.html', {'form': form})
 
 @user_passes_test(staff_check, login_url='/adminpanel/login/')
 def modify_product(request, product_pk):
-    product = Product.objects.get(pk = product_pk)
+    product = get_object_or_404(Product, pk=product_pk)
     if request.method == "POST":
         form = ProductForm(request.POST, instance=product)
-        if form.is_valid(): 
-            product.sku_code = form.cleaned_data['sku_code']
-            product.category = form.cleaned_data['category']
-            product.subcategory = form.cleaned_data['subcategory']
-            product.product_name = form.cleaned_data['product_name']
-            product.product_description = form.cleaned_data['product_description']
-            product.unit_price = form.cleaned_data['unit_price']
-            product.product_rating = form.cleaned_data['product_rating']
-            product.quantity_on_hand = form.cleaned_data['quantity_on_hand']
-            product.reorder_quantity = form.cleaned_data['reorder_quantity']
-            product.save()
-        return redirect("adminpanel:adminpanel_product_list")
-    else: 
-        
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Product updated.")
+            return redirect("adminpanel:adminpanel_product_list")
+    else:
         form = ProductForm(instance=product)
     context = {'form': form, 'product': product, 'page_title': f"Modify {product.product_name}"}
     return render(request, 'adminpanel/modify_product.html', context)
