@@ -12,7 +12,9 @@
     <header>
       <div class="header-left">
         <div class="logo">
-          <a href="{% url 'onlinestore:landing_page' %}">AuroraMart</a>
+          <a href="{% url 'onlinestore:landing_page' %}">
+            <img src="{% static 'onlinestore/images/logo.png' %}" alt="AuroraMart Logo" class="logo-img" />
+          </a>
         </div>
         <div class="header-actions">
           {% if user.is_authenticated %}

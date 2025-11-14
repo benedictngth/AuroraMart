@@ -46,19 +46,6 @@ header {
     height: var(--header-total-height);
 }
 
-.logo {
-    font-size: 1.8em;
-    font-weight: bold;
-    padding-left: var(--page-padding-x);
-    display: flex;
-    align-items: center;
-    height: var(--logo-bar-height);
-}
-
-.logo a {
-    color: var(--text-color);
-}
-
 .header-left {
     width: 100%;
     display: flex;
@@ -70,7 +57,7 @@ header {
 .header-actions {
     display: flex;
     align-items: center;
-    margin-right: var(--page-padding-x); /* Add space between logo and login button */
+    margin-right: var(--page-padding-x);
 }
 
 #main-nav-menu {
@@ -458,9 +445,6 @@ header {
     
     header {
         height: calc(var(--logo-bar-height) + var(--nav-bar-links-height) * 0.7);
-    }
-    .logo {
-        font-size: 1.5em;
     }
     #main-nav-menu {
         padding: 0 10px;
@@ -911,4 +895,31 @@ header {
 .shop-all-btn:hover {
     background-color: var(--secondary-color); 
     transform: translateY(-2px); 
+}
+
+.logo {
+    font-size: 1.8em;
+    font-weight: bold;
+    padding-left: var(--page-padding-x);
+    display: flex;
+    align-items: flex-start;
+    padding-top: 5px;
+    height: auto;
+    max-width: 200px;
+    z-index: 2001;
+}
+
+.logo img {
+    max-width: 150px;
+    max-height: 100px;
+    height: auto;
+    display: block;
+}
+
+.logo-img {
+    transition: opacity 0.3s ease;
+}
+
+.logo-img:hover {
+    opacity: 0.8;
 }
